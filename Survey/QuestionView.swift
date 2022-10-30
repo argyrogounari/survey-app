@@ -36,7 +36,17 @@ struct QuestionView: View {
                         .padding([.leading, .trailing], 20)
                     HStack {
                         Spacer()
-                        Button(submitButtonText, action: {})
+                        Button(submitButtonText, action: {
+                            Task {
+                                let currentQuestion = database.questions[i]
+                                let isSuccesful = await database.setAnswer(question: currentQuestion)
+                                if (isSuccesful) {
+                                    // Success banner
+                                } else {
+                                    // Fail banner with retry button
+                                }
+                            }
+                        })
                             .padding([.top, .bottom], 10)
                             .padding([.leading, .trailing], 35)
                             .foregroundColor(Color.blue)
@@ -77,7 +87,7 @@ struct QuestionView: View {
               .disabled(isNextButtonDisabled)
             }
         }.onAppear {
-            self.database.setQuestions()
+            self.database.getQuestions()
         }
     }
 }
