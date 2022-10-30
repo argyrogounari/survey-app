@@ -7,11 +7,7 @@
 
 import Foundation
 
-struct Questions: Codable {
-    var questions: [Question]
-}
-
-class Question: ObservableObject, Codable {
+class Question: ObservableObject, Codable, Identifiable {
     let id: Int
     let question: String
     @Published var answer: String = ""

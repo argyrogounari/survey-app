@@ -8,27 +8,54 @@
 import SwiftUI
 
 struct QuestionView: View {
+    @State private var currentQuestion = 1
+    @State private var numQuestionsSubmitted = 0
+    @State private var isPreviousButtonDisabled = true
+    @State private var isNextButtonDisabled = false
+    @ObservedObject var database = Database()
+    
     var body: some View {
-            
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-            .navigationTitle("Question 1/10")
-            .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                      Button(action: {
-                        print("Refresh")
-                      }) {
-                        Text("Previous")
-                      }
+        TabView (selection: $currentQuestion) {
+            ForEach(0..<database.questions.count, id:\.self) { i in
+                VStack {
+                    VStack {
+                        Text("Questions submitted: \(numQuestionsSubmitted)")
+                        Text(database.questions[i].question).font(.title).bold()
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                      Button(action: {
-                        print("Refresh")
-                      }) {
-                          Text("Next")
-                      }
-                    }
-                  }
-        
+                    TextField("Type here for an answer", text: $database.questions[i].answer)
+                }
+                .tag(database.questions[i].id)
+            }
+        }
+        .swipeActions(content: {})
+        .swipeActions(allowsFullSwipe: false, content: {})
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .edgesIgnoringSafeArea(.vertical)
+        .navigationTitle("Question \(currentQuestion)/10")
+        .onChange(of: currentQuestion) { _ in
+            isPreviousButtonDisabled = currentQuestion == 1
+            isNextButtonDisabled = currentQuestion == database.questions.last?.id
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+              Button(action: {
+                  currentQuestion -= 1
+              }) {
+                Text("Previous")
+              }
+              .disabled(isPreviousButtonDisabled)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+              Button(action: {
+                  currentQuestion += 1
+              }) {
+                  Text("Next")
+              }
+              .disabled(isNextButtonDisabled)
+            }
+        }.onAppear {
+            self.database.setQuestions()
+        }
     }
 }
 

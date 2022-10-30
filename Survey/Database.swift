@@ -6,24 +6,32 @@
 //
 
 import Foundation
+import Combine
 
-class Database {
+class Database: ObservableObject {
+    @Published var questions: [Question] = []
     
-    func getQuestions() async -> [Question]  {
+    func setQuestions() {
         guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
             print("Invalid URL: https://xm-assignment.web.app/questions")
-            return []
+            return
         }
 
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let questions = try? JSONDecoder().decode([Question].self, from: data) {
-                return questions
+        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error  in
+            guard let data = data, error == nil else {
+                return
             }
-        } catch {
-            print("Invalid data: \(error)")
+            
+            do {
+                let questions = try JSONDecoder().decode([Question].self, from: data)
+                DispatchQueue.main.async {
+                    self?.questions = questions
+                }
+            } catch {
+                print(error)
+            }
         }
         
-        return []
+        task.resume()
     }
 }
