@@ -12,7 +12,7 @@ struct WelcomeView: View {
     
     var body: some View {
         VStack {
-            NavigationLink(destination: QuestionView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
+            NavigationLink(destination: QuestionsTabView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
 
             Spacer()
             

@@ -32,4 +32,9 @@ class Question: ObservableObject, Codable, Identifiable {
         try container.encode(id, forKey: .id)
         try container.encode(answer, forKey: .answer)
     }
+    
+    init(id: Int, question: String) {
+        self.id = id
+        self.question = question
+    }
 }

@@ -2,98 +2,104 @@
 //  QuestionView.swift
 //  Survey
 //
-//  Created by argyro gounari on 29/10/2022.
+//  Created by argyro gounari on 30/10/2022.
 //
 
 import SwiftUI
 
 struct QuestionView: View {
     @State private var currentQuestion = 1
-    @State private var numQuestionsSubmitted = 0
+    @Binding var numQuestionsSubmitted: Int
     @State private var isPreviousButtonDisabled = true
     @State private var isNextButtonDisabled = false
     @State private var submitButtonText = "Submit"
-    @ObservedObject var database = Database()
+    @State private var submitButtonForegroundColor = Color.gray
+    @State private var submitButtonBackgroundColor = Color.gray.opacity(0.2)
+    @State private var submitButtonDisabled = true
+    @State private var answerTextFieldColor = Color.black
+    @State private var answerTextFieldDisabled = false
+    @ObservedObject var question: Question
     
+    @State var showFailNotificationBanner: Bool = false
+    @State var showSuccessNotificationBanner: Bool = false
+    @State var notificationBannerFail: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Fail)
+    @State var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Success)
+        
     var body: some View {
-        TabView (selection: $currentQuestion) {
-            ForEach(0..<database.questions.count, id:\.self) { i in
-                VStack (alignment: .leading) {
-                    VStack (alignment: .leading) {
-                        Text("Questions submitted: \(numQuestionsSubmitted)")
-                            .multilineTextAlignment(.center)
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Rectangle().fill(Color.yellow))
-                        Text(database.questions[i].question)
-                            .bold()
-                            .frame(maxWidth: .infinity)
-                            .padding([.top, .bottom], 40)
-                            .padding([.leading, .trailing], 20)
-                    }.background(Rectangle().fill(Color("backgroundColor")))
-                    TextField("Type here for an answer", text: $database.questions[i].answer)
-                        .padding([.top, .bottom], 40)
-                        .padding([.leading, .trailing], 20)
-                    HStack {
-                        Spacer()
-                        Button(submitButtonText, action: {
-                            Task {
-                                let currentQuestion = database.questions[i]
-                                let isSuccesful = await database.setAnswer(question: currentQuestion)
-                                if (isSuccesful) {
-                                    // Success banner
-                                } else {
-                                    // Fail banner with retry button
-                                }
-                            }
-                        })
-                            .padding([.top, .bottom], 10)
-                            .padding([.leading, .trailing], 35)
-                            .foregroundColor(Color.blue)
-                            .background(Color.white)
-                            .cornerRadius(10)
-                        Spacer()
+        VStack (alignment: .leading) {
+            VStack (alignment: .leading) {
+                Text("Questions submitted: \(numQuestionsSubmitted)")
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Rectangle().fill(Color.yellow))
+                Text(question.question)
+                    .bold()
+                    .frame(maxWidth: .infinity)
+                    .padding([.top, .bottom], 40)
+                    .padding([.leading, .trailing], 20)
+            }.background(Rectangle().fill(Color("backgroundColor")))
+            TextField("Type here for an answer", text: $question.answer)
+                .padding([.top, .bottom], 40)
+                .padding([.leading, .trailing], 20)
+                .foregroundColor(answerTextFieldColor)
+                .disabled(answerTextFieldDisabled)
+                .onChange(of: question.answer) { _ in
+                    if (question.answer == "") {
+                        disableSubmitButton()
+                    } else {
+                        enableSubmitButton()
                     }
-                    Spacer()
                 }
-                .tag(database.questions[i].id)
-                .background(Rectangle().fill(Color("backgroundColor")))
+            HStack {
+                Spacer()
+                Button(submitButtonText, action: {
+                    submitAnswer()
+                })
+                    .padding([.top, .bottom], 10)
+                    .padding([.leading, .trailing], 35)
+                    .foregroundColor(submitButtonForegroundColor)
+                    .background(submitButtonBackgroundColor)
+                    .cornerRadius(10)
+                    .disabled(submitButtonDisabled)
+                Spacer()
             }
+            Spacer()
         }
-        .swipeActions(content: {})
-        .swipeActions(allowsFullSwipe: false, content: {})
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .edgesIgnoringSafeArea(.vertical)
-        .onChange(of: currentQuestion) { _ in
-            isPreviousButtonDisabled = currentQuestion == 1
-            isNextButtonDisabled = currentQuestion == database.questions.last?.id
-        }
-        .navigationTitle("Question \(currentQuestion)/\(database.questions.count)")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-              Button(action: {
-                  currentQuestion -= 1
-              }) {
-                Text("Previous")
-              }
-              .disabled(isPreviousButtonDisabled)
+        .tag(question.id)
+        .background(Rectangle().fill(Color("backgroundColor")))
+        .notificatioBanner(data: $notificationBannerSuccess, show: $showSuccessNotificationBanner, retry: {})
+        .notificatioBanner(data: $notificationBannerFail, show: $showFailNotificationBanner, retry:  {submitAnswer()}
+        )
+    }
+    
+    func submitAnswer() {
+        Task {
+            let isSuccesful = await Database().setAnswer(question: question)
+            if (isSuccesful) {
+                // Success banner
+                showSuccessNotificationBanner = true
+                submitButtonText = "Already submitted"
+                disableSubmitButton()
+                answerTextFieldColor = Color.gray
+                answerTextFieldDisabled = true
+                numQuestionsSubmitted += 1
+            } else {
+                showFailNotificationBanner = true
+                // Fail banner with retry button
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-              Button(action: {
-                  currentQuestion += 1
-              }) {
-                  Text("Next")
-              }
-              .disabled(isNextButtonDisabled)
-            }
-        }.onAppear {
-            self.database.getQuestions()
         }
     }
-}
-
-struct QuestionView_Previews: PreviewProvider {
-    static var previews: some View {
-        QuestionView()
+    
+    func disableSubmitButton() {
+        submitButtonForegroundColor = Color.gray
+        submitButtonBackgroundColor = Color.gray.opacity(0.2)
+        submitButtonDisabled = true
+    }
+    
+    func enableSubmitButton() {
+        submitButtonForegroundColor = Color.blue
+        submitButtonBackgroundColor = Color.white
+        submitButtonDisabled = false
     }
 }
