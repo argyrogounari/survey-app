@@ -45,7 +45,7 @@ struct QuestionView: View {
                 .foregroundColor(answerTextFieldColor)
                 .disabled(answerTextFieldDisabled)
                 .onChange(of: question.answer) { _ in
-                    if (question.answer == "") {
+                    if (question.answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
                         disableSubmitButton()
                     } else {
                         enableSubmitButton()
@@ -77,7 +77,6 @@ struct QuestionView: View {
         Task {
             let isSuccesful = await Database().setAnswer(question: question)
             if (isSuccesful) {
-                // Success banner
                 showSuccessNotificationBanner = true
                 submitButtonText = "Already submitted"
                 disableSubmitButton()
@@ -86,7 +85,6 @@ struct QuestionView: View {
                 numQuestionsSubmitted += 1
             } else {
                 showFailNotificationBanner = true
-                // Fail banner with retry button
             }
         }
     }
