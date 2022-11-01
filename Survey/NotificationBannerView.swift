@@ -56,8 +56,8 @@ struct NotificationBannerModifier: ViewModifier {
                 VStack {
                     HStack {
                         Text(data.type.title)
-                        .bold()
-                        .font(.title)
+                            .bold()
+                            .font(.title)
                         Spacer()
                         if (data.type == .Fail) {
                             Button(action: {
@@ -67,13 +67,13 @@ struct NotificationBannerModifier: ViewModifier {
                             }){
                                 HStack {
                                     Text(data.type.buttonText)
-                                    .bold()
+                                        .bold()
                                 }
                                 .padding(10)
                                 .foregroundColor(.white)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.white, lineWidth: 2)
+                                        .stroke(Color.white, lineWidth: 2)
                                 )
                             }
                         }

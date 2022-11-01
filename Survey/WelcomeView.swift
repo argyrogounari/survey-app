@@ -13,14 +13,14 @@ struct WelcomeView: View {
     var body: some View {
         VStack {
             NavigationLink(destination: QuestionsTabView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
-
+            
             Spacer()
             
             Button(
-              "Start survey",
-              action: {
-                  self.isShowingDetailView = true
-              }
+                "Start survey",
+                action: {
+                    self.isShowingDetailView = true
+                }
             )
             .padding(.vertical, 10)
             .padding(.horizontal, 35)
@@ -29,13 +29,13 @@ struct WelcomeView: View {
             .cornerRadius(10)
             
             Spacer()
-       }
+        }
         .frame(
-          minWidth: 0,
-          maxWidth: .infinity,
-          minHeight: 0,
-          maxHeight: .infinity,
-          alignment: .center
+            minWidth: 0,
+            maxWidth: .infinity,
+            minHeight: 0,
+            maxHeight: .infinity,
+            alignment: .center
         )
         .background(Color("backgroundColor"))
     }

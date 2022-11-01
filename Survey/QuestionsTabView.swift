@@ -31,20 +31,20 @@ struct QuestionsTabView: View {
         .navigationTitle("Question \(currentQuestion)/\(questions.count)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-              Button(action: {
-                  currentQuestion -= 1
-              }) {
-                Text("Previous")
-              }
-              .disabled(isPreviousButtonDisabled)
+                Button(action: {
+                    currentQuestion -= 1
+                }) {
+                    Text("Previous")
+                }
+                .disabled(isPreviousButtonDisabled)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-              Button(action: {
-                  currentQuestion += 1
-              }) {
-                  Text("Next")
-              }
-              .disabled(isNextButtonDisabled)
+                Button(action: {
+                    currentQuestion += 1
+                }) {
+                    Text("Next")
+                }
+                .disabled(isNextButtonDisabled)
             }
         }.onAppear {
             Task {

@@ -24,7 +24,7 @@ struct QuestionView: View {
     @State var showSuccessNotificationBanner: Bool = false
     @State var notificationBannerFail: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Fail)
     @State var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Success)
-        
+    
     var body: some View {
         VStack (alignment: .leading) {
             VStack (alignment: .leading) {
@@ -46,7 +46,7 @@ struct QuestionView: View {
                 .disabled(answerTextFieldDisabled)
                 .onChange(of: question.answer) { _ in
                     if (question.answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
-                           disableSubmitButton()
+                        disableSubmitButton()
                     } else {
                         enableSubmitButton()
                     }
@@ -56,12 +56,12 @@ struct QuestionView: View {
                 Button(submitButtonText, action: {
                     submitAnswer()
                 })
-                    .padding([.top, .bottom], 10)
-                    .padding([.leading, .trailing], 35)
-                    .foregroundColor(submitButtonForegroundColor)
-                    .background(submitButtonBackgroundColor)
-                    .cornerRadius(10)
-                    .disabled(submitButtonDisabled)
+                .padding([.top, .bottom], 10)
+                .padding([.leading, .trailing], 35)
+                .foregroundColor(submitButtonForegroundColor)
+                .background(submitButtonBackgroundColor)
+                .cornerRadius(10)
+                .disabled(submitButtonDisabled)
                 Spacer()
             }
             Spacer()

@@ -10,9 +10,9 @@ import Combine
 
 class Database: ObservableObject {
     let session: URLSession
-
+    
     init(urlSession: URLSession = .shared) {
-       self.session = urlSession
+        self.session = urlSession
     }
     
     func getQuestions(completion: @escaping ([Question]) -> Void) async {
@@ -23,7 +23,7 @@ class Database: ObservableObject {
         
         do {
             let (data, _) = try await session.data(from: url)
-
+            
             if let questions = try? JSONDecoder().decode([Question].self, from: data) {
                 completion(questions)
             }
