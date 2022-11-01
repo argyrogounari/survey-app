@@ -97,6 +97,8 @@ struct NotificationBannerModifier: ViewModifier {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: makeBannerDisappear!)
                 })
                 .padding()
+                .accessibility(addTraits: .isButton)
+                .accessibilityIdentifier("notificationBanner")
             }
         }
     }

@@ -37,6 +37,7 @@ struct QuestionsTabView: View {
                     Text("Previous")
                 }
                 .disabled(isPreviousButtonDisabled)
+                .accessibilityIdentifier("previousToolBarButton")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
@@ -45,6 +46,7 @@ struct QuestionsTabView: View {
                     Text("Next")
                 }
                 .disabled(isNextButtonDisabled)
+                .accessibilityIdentifier("nextToolBarButton")
             }
         }.onAppear {
             Task {

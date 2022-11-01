@@ -22,6 +22,7 @@ struct WelcomeView: View {
                     self.isShowingDetailView = true
                 }
             )
+            .accessibilityIdentifier("startSurveyButton")
             .padding(.vertical, 10)
             .padding(.horizontal, 35)
             .foregroundColor(Color.blue)
