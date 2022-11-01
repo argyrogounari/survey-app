@@ -75,16 +75,17 @@ struct QuestionView: View {
     
     func submitAnswer() {
         Task {
-            let isSuccesful = await Database().setAnswer(question: question)
-            if (isSuccesful) {
-                showSuccessNotificationBanner = true
-                submitButtonText = "Already submitted"
-                disableSubmitButton()
-                answerTextFieldColor = Color.gray
-                answerTextFieldDisabled = true
-                numQuestionsSubmitted += 1
-            } else {
-                showFailNotificationBanner = true
+            await Database().setAnswer(question: question) {_, isSuccesful in
+                if (isSuccesful) {
+                    showSuccessNotificationBanner = true
+                    submitButtonText = "Already submitted"
+                    disableSubmitButton()
+                    answerTextFieldColor = Color.gray
+                    answerTextFieldDisabled = true
+                    numQuestionsSubmitted += 1
+                } else {
+                    showFailNotificationBanner = true
+                }
             }
         }
     }

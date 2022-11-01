@@ -28,19 +28,19 @@ class Database: ObservableObject {
                 completion(questions)
             }
         } catch {
-            print("Invalid data: \(error)")
+            print("Failed to get questions: \(error)")
         }
     }
     
-    func setAnswer(question: Question) async -> Bool {
+    func setAnswer(question: Question, completion: (HTTPURLResponse, Bool) -> Void) async {
         guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
             print("Invalid URL: https://xm-assignment.web.app/question/submit")
-            return false
+            return
         }
         
         guard let encoded = try? JSONEncoder().encode(question) else {
-            print("Failed to encode question")
-            return false
+            print("Failed to encode question.")
+            return
         }
         
         var request = URLRequest(url: url)
@@ -50,14 +50,14 @@ class Database: ObservableObject {
             let (_, response) = try await session.upload(for: request, from: encoded)
             if let httpResponse = response as? HTTPURLResponse {
                 if (httpResponse.statusCode == 200) {
-                    return true
+                    completion(httpResponse, true)
+                    return
                 }
+                completion(httpResponse, false)
+                return
             }
-            return false
         } catch {
-            print("Sumbitting answer failed: \(error)")
+            print("Failed to submit answer: \(error)")
         }
-        
-        return false
     }
 }

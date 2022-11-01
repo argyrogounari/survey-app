@@ -37,4 +37,10 @@ class Question: ObservableObject, Codable, Identifiable {
         self.id = id
         self.question = question
     }
+    
+    init(id: Int, question: String, answer: String) {
+        self.id = id
+        self.question = question
+        self.answer = answer
+    }
 }
