@@ -18,7 +18,7 @@ struct QuestionView: View {
     @State private var submitButtonDisabled = true
     @State private var answerTextFieldColor = Color.black
     @State private var answerTextFieldDisabled = false
-    @ObservedObject var question: Question
+    @Binding var question: Question
     
     @State var showFailNotificationBanner: Bool = false
     @State var showSuccessNotificationBanner: Bool = false
@@ -46,7 +46,7 @@ struct QuestionView: View {
                 .disabled(answerTextFieldDisabled)
                 .onChange(of: question.answer) { _ in
                     if (question.answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
-                        disableSubmitButton()
+                           disableSubmitButton()
                     } else {
                         enableSubmitButton()
                     }

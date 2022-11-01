@@ -11,7 +11,6 @@ class Question: ObservableObject, Codable, Identifiable {
     let id: Int
     let question: String
     @Published var answer: String = ""
-    @Published var isSubmitted: Bool = false
     
     enum CodingKeys: CodingKey {
         case id
@@ -30,7 +29,8 @@ class Question: ObservableObject, Codable, Identifiable {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         try container.encode(id, forKey: .id)
-        try container.encode(answer, forKey: .answer)
+        try container.encodeIfPresent(question, forKey: .question)
+        try container.encodeIfPresent(answer, forKey: .answer)
     }
     
     init(id: Int, question: String) {

@@ -12,12 +12,12 @@ struct QuestionsTabView: View {
     @State private var numQuestionsSubmitted = 0
     @State private var isPreviousButtonDisabled = true
     @State private var isNextButtonDisabled = false
-    @ObservedObject var database = Database()
+    @State var questions: [Question] = []
     
     var body: some View {
         TabView (selection: $currentQuestion) {
-            ForEach(0..<database.questions.count, id:\.self) { i in
-                QuestionView(numQuestionsSubmitted: $numQuestionsSubmitted, question: database.questions[i])
+            ForEach(0..<questions.count, id:\.self) { i in
+                QuestionView(numQuestionsSubmitted: $numQuestionsSubmitted, question: $questions[i])
             }
         }
         .swipeActions(content: {})
@@ -26,9 +26,9 @@ struct QuestionsTabView: View {
         .edgesIgnoringSafeArea(.vertical)
         .onChange(of: currentQuestion) { _ in
             isPreviousButtonDisabled = currentQuestion == 1
-            isNextButtonDisabled = currentQuestion == database.questions.last?.id
+            isNextButtonDisabled = currentQuestion == questions.last?.id
         }
-        .navigationTitle("Question \(currentQuestion)/\(database.questions.count)")
+        .navigationTitle("Question \(currentQuestion)/\(questions.count)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
               Button(action: {
@@ -47,7 +47,10 @@ struct QuestionsTabView: View {
               .disabled(isNextButtonDisabled)
             }
         }.onAppear {
-            self.database.getQuestions()
+            Task {
+                await Database().getQuestions{ questionsList in questions = questionsList
+                }
+            }
         }
     }
 }
