@@ -8,51 +8,43 @@
 import SwiftUI
 
 struct QuestionsTabView: View {
-    @State private var currentQuestion = 1
-    @State private var numQuestionsSubmitted = 0
-    @State private var isPreviousButtonDisabled = true
-    @State private var isNextButtonDisabled = false
-    @State var questions: [Question] = []
+    @StateObject var vm = QuestionsTabViewViewModel()
     
     var body: some View {
-        TabView (selection: $currentQuestion) {
-            ForEach(0..<questions.count, id:\.self) { i in
-                QuestionView(numQuestionsSubmitted: $numQuestionsSubmitted, question: $questions[i])
+        TabView (selection: $vm.currentQuestion) {
+            ForEach(0..<$vm.questions.count, id:\.self) { i in
+                QuestionView(question: $vm.questions[i], numQuestionsSubmitted: $vm.numQuestionsSubmitted)
             }
         }
         .swipeActions(content: {})
         .swipeActions(allowsFullSwipe: false, content: {})
         .tabViewStyle(.page(indexDisplayMode: .never))
         .edgesIgnoringSafeArea(.vertical)
-        .onChange(of: currentQuestion) { _ in
-            isPreviousButtonDisabled = currentQuestion == 1
-            isNextButtonDisabled = currentQuestion == questions.last?.id
+        .onChange(of: vm.currentQuestion) { _ in
+            vm.changeToolbarButtonStatesOnQuestionChange()
         }
-        .navigationTitle("Question \(currentQuestion)/\(questions.count)")
+        .navigationTitle("Question \(vm.currentQuestion)/\(vm.questions.count)")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    currentQuestion -= 1
+                    vm.decreaseQuestionNum()
                 }) {
                     Text("Previous")
                 }
-                .disabled(isPreviousButtonDisabled)
+                .disabled(vm.isPreviousButtonDisabled)
                 .accessibilityIdentifier("previousToolBarButton")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    currentQuestion += 1
+                    vm.increaseQuestionNum()
                 }) {
                     Text("Next")
                 }
-                .disabled(isNextButtonDisabled)
+                .disabled(vm.isNextButtonDisabled)
                 .accessibilityIdentifier("nextToolBarButton")
             }
         }.onAppear {
-            Task {
-                await Database().getQuestions{ questionsList in questions = questionsList
-                }
-            }
+            vm.getQuestions()
         }
     }
 }

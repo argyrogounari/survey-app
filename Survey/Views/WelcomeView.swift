@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct WelcomeView: View {
-    @State private var isShowingDetailView = false
+    @StateObject private var vm = WelcomeViewModel()
     
     var body: some View {
         VStack {
-            NavigationLink(destination: QuestionsTabView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
+            NavigationLink(destination: QuestionsTabView(), isActive: $vm.isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
             
             Spacer()
             
             Button(
                 "Start survey",
                 action: {
-                    self.isShowingDetailView = true
+                    vm.showDetailView()
                 }
             )
             .accessibilityIdentifier("startSurveyButton")

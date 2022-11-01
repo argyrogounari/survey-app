@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class Database: ObservableObject {
+@MainActor class Database: ObservableObject {
     let session: URLSession
     
     init(urlSession: URLSession = .shared) {

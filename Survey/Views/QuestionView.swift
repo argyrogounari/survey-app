@@ -8,22 +8,9 @@
 import SwiftUI
 
 struct QuestionView: View {
-    @State private var currentQuestion = 1
-    @Binding var numQuestionsSubmitted: Int
-    @State private var isPreviousButtonDisabled = true
-    @State private var isNextButtonDisabled = false
-    @State private var submitButtonText = "Submit"
-    @State private var submitButtonForegroundColor = Color.gray
-    @State private var submitButtonBackgroundColor = Color.gray.opacity(0.2)
-    @State private var submitButtonDisabled = true
-    @State private var answerTextFieldColor = Color.black
-    @State private var answerTextFieldDisabled = false
+    @StateObject var vm = QuestionViewModel()
     @Binding var question: Question
-    
-    @State var showFailNotificationBanner: Bool = false
-    @State var showSuccessNotificationBanner: Bool = false
-    @State var notificationBannerFail: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Fail)
-    @State var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Success)
+    @Binding var numQuestionsSubmitted: Int
     
     var body: some View {
         VStack (alignment: .leading) {
@@ -44,27 +31,25 @@ struct QuestionView: View {
             TextField("Type here for an answer", text: $question.answer)
                 .padding([.top, .bottom], 40)
                 .padding([.leading, .trailing], 20)
-                .foregroundColor(answerTextFieldColor)
-                .disabled(answerTextFieldDisabled)
+                .foregroundColor(vm.answerTextFieldColor)
+                .disabled(vm.answerTextFieldDisabled)
                 .onChange(of: question.answer) { _ in
-                    if (question.answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
-                        disableSubmitButton()
-                    } else {
-                        enableSubmitButton()
-                    }
+                    vm.setStateForSubmitButton(answer: question.answer)
                 }
                 .accessibilityIdentifier("answerTextField")
             HStack {
                 Spacer()
-                Button(submitButtonText, action: {
-                    submitAnswer()
+                Button(vm.submitButtonText, action: {
+                    vm.submitAnswer(question: question) { isSuccesful in
+                        numQuestionsSubmitted += 1
+                    }
                 })
                 .padding([.top, .bottom], 10)
                 .padding([.leading, .trailing], 35)
-                .foregroundColor(submitButtonForegroundColor)
-                .background(submitButtonBackgroundColor)
+                .foregroundColor(vm.submitButtonForegroundColor)
+                .background(vm.submitButtonBackgroundColor)
                 .cornerRadius(10)
-                .disabled(submitButtonDisabled)
+                .disabled(vm.submitButtonDisabled)
                 .accessibilityIdentifier("submitButton")
                 Spacer()
             }
@@ -72,37 +57,8 @@ struct QuestionView: View {
         }
         .tag(question.id)
         .background(Rectangle().fill(Color("backgroundColor")))
-        .notificatioBanner(data: $notificationBannerSuccess, show: $showSuccessNotificationBanner, retry: {})
-        .notificatioBanner(data: $notificationBannerFail, show: $showFailNotificationBanner, retry:  {submitAnswer()}
+        .notificatioBanner(data: $vm.notificationBannerSuccess, show: $vm.showSuccessNotificationBanner, retry: {})
+        .notificatioBanner(data: $vm.notificationBannerFail, show: $vm.showFailNotificationBanner, retry:  {vm.submitAnswer(question: question, completion: {isSuccessflul in numQuestionsSubmitted += 1})}
         )
-    }
-    
-    func submitAnswer() {
-        Task {
-            await Database().setAnswer(question: question) {_, isSuccesful in
-                if (isSuccesful) {
-                    showSuccessNotificationBanner = true
-                    submitButtonText = "Already submitted"
-                    disableSubmitButton()
-                    answerTextFieldColor = Color.gray
-                    answerTextFieldDisabled = true
-                    numQuestionsSubmitted += 1
-                } else {
-                    showFailNotificationBanner = true
-                }
-            }
-        }
-    }
-    
-    func disableSubmitButton() {
-        submitButtonForegroundColor = Color.gray
-        submitButtonBackgroundColor = Color.gray.opacity(0.2)
-        submitButtonDisabled = true
-    }
-    
-    func enableSubmitButton() {
-        submitButtonForegroundColor = Color.blue
-        submitButtonBackgroundColor = Color.white
-        submitButtonDisabled = false
     }
 }
