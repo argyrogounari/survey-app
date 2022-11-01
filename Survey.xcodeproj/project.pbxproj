@@ -109,15 +109,12 @@
 			isa = PBXGroup;
 			children = (
 				77B4A536290D24FE00D98EE8 /* SurveyApp.swift */,
-				77B4A538290D24FE00D98EE8 /* WelcomeView.swift */,
+				77B4A5752911853C00D98EE8 /* Views */,
+				77B4A5742911851500D98EE8 /* Database */,
+				77B4A573291184F400D98EE8 /* Models */,
+				77B4A572291184DD00D98EE8 /* Helpers */,
 				77B4A53A290D250000D98EE8 /* Assets.xcassets */,
 				77B4A53C290D250000D98EE8 /* Preview Content */,
-				77B4A560290D2DFE00D98EE8 /* ColorHelper.swift */,
-				77B4A562290D42B600D98EE8 /* Database.swift */,
-				77B4A564290D439F00D98EE8 /* Question.swift */,
-				77B4A568290D7C2C00D98EE8 /* QuestionsTabView.swift */,
-				77B4A56A290F109200D98EE8 /* QuestionView.swift */,
-				77B4A56C290FBC7600D98EE8 /* NotificationBannerView.swift */,
 			);
 			path = Survey;
 			sourceTree = "<group>";
@@ -146,6 +143,41 @@
 				77B4A553290D250000D98EE8 /* SurveyUITestsLaunchTests.swift */,
 			);
 			path = SurveyUITests;
+			sourceTree = "<group>";
+		};
+		77B4A572291184DD00D98EE8 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				77B4A560290D2DFE00D98EE8 /* ColorHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		77B4A573291184F400D98EE8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				77B4A564290D439F00D98EE8 /* Question.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		77B4A5742911851500D98EE8 /* Database */ = {
+			isa = PBXGroup;
+			children = (
+				77B4A562290D42B600D98EE8 /* Database.swift */,
+			);
+			path = Database;
+			sourceTree = "<group>";
+		};
+		77B4A5752911853C00D98EE8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				77B4A538290D24FE00D98EE8 /* WelcomeView.swift */,
+				77B4A568290D7C2C00D98EE8 /* QuestionsTabView.swift */,
+				77B4A56A290F109200D98EE8 /* QuestionView.swift */,
+				77B4A56C290FBC7600D98EE8 /* NotificationBannerView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
