@@ -38,6 +38,48 @@ struct AppState {
             self.questions = newValue.questions
         }
     }
+    
+    // - MARK: QuestionView
+    
+    var submitButtonText = "Submit"
+    var submitButtonForegroundColor = Color.gray
+    var submitButtonBackgroundColor = Color.gray.opacity(0.2)
+    var submitButtonDisabled = true
+    var answerTextFieldColor = Color.black
+    var answerTextFieldDisabled = false
+    var showFailNotificationBanner: Bool = false
+    var showSuccessNotificationBanner: Bool = false
+    var notificationBannerFail: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Fail)
+    var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Success)
+
+    var questionViewState: QuestionViewState {
+        get {
+            QuestionViewState(
+                submitButtonText: self.submitButtonText,
+                submitButtonForegroundColor: self.submitButtonForegroundColor,
+                submitButtonBackgroundColor: self.submitButtonBackgroundColor,
+                submitButtonDisabled: self.submitButtonDisabled,
+                answerTextFieldColor: self.answerTextFieldColor,
+                answerTextFieldDisabled: self.answerTextFieldDisabled,
+                showFailNotificationBanner: self.showFailNotificationBanner,
+                showSuccessNotificationBanner: self.showSuccessNotificationBanner,
+                notificationBannerFail: self.notificationBannerFail,
+                notificationBannerSuccess: self.notificationBannerSuccess
+            )
+        }
+        set {
+            self.submitButtonText = newValue.submitButtonText
+            self.submitButtonForegroundColor = newValue.submitButtonForegroundColor
+            self.submitButtonBackgroundColor = newValue.submitButtonBackgroundColor
+            self.submitButtonDisabled = newValue.submitButtonDisabled
+            self.answerTextFieldColor = newValue.answerTextFieldColor
+            self.answerTextFieldDisabled = newValue.answerTextFieldDisabled
+            self.showFailNotificationBanner = newValue.showFailNotificationBanner
+            self.showSuccessNotificationBanner = newValue.showSuccessNotificationBanner
+            self.notificationBannerFail = newValue.notificationBannerFail
+            self.notificationBannerSuccess = newValue.notificationBannerSuccess
+        }
+    }
 }
 
 struct TabViewState {
@@ -48,11 +90,25 @@ struct TabViewState {
     var questions: [Question]
 }
 
+struct QuestionViewState {
+    var submitButtonText: String
+    var submitButtonForegroundColor: Color
+    var submitButtonBackgroundColor: Color
+    var submitButtonDisabled: Bool
+    var answerTextFieldColor: Color
+    var answerTextFieldDisabled: Bool
+    var showFailNotificationBanner: Bool
+    var showSuccessNotificationBanner: Bool
+    var notificationBannerFail: NotificationBannerModifier.NotificationBannerData
+    var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData
+}
+
 // - MARK: Actions
 
 enum AppAction {
     case welcome(WelcomeAction)
     case tabView(TabViewAction)
+    case questionView(QuestionViewAction)
     
     var welcome: WelcomeAction? {
        get {
@@ -75,6 +131,17 @@ enum AppAction {
          self = .tabView(newValue)
        }
      }
+    
+    var questionView: QuestionViewAction? {
+       get {
+         guard case let .questionView(value) = self else { return nil }
+         return value
+       }
+       set {
+         guard case .questionView = self, let newValue = newValue else { return }
+         self = .questionView(newValue)
+       }
+     }
 }
 
 enum WelcomeAction {
@@ -88,11 +155,17 @@ enum TabViewAction {
     case tabViewAppeared
 }
 
+enum QuestionViewAction {
+    case submitButtonTapped
+    case answerTextChanged // is this action? maybe effect?
+}
+
 // - MARK: Reducers
 
 let appReducer: (inout AppState, AppAction) -> Void = combine(
     pullback(welcomeReducer, value: \.isShowingDetailView, action: \.welcome),
-    pullback(tabViewReducer, value: \.tabViewState, action: \.tabView)
+    pullback(tabViewReducer, value: \.tabViewState, action: \.tabView),
+    pullback(questionViewReducer, value: \.questionViewState, action: \.questionView)
 )
 
 func welcomeReducer(state: inout Bool, action: WelcomeAction) {
@@ -118,6 +191,15 @@ func tabViewReducer(state: inout TabViewState, action: TabViewAction) {
             }
         }
     }
+}
+
+func questionViewReducer(state: inout QuestionViewState, action: QuestionViewAction) {
+//    switch action {
+//    case .submitButtonTapped:
+////        submitAnswer
+//    case .answerTextChanged:
+////        setStateForSubmitButton
+//    }
 }
 
 func combine<Value, Action> (
