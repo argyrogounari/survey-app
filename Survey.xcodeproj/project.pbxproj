@@ -121,12 +121,12 @@
 			isa = PBXGroup;
 			children = (
 				77B4A536290D24FE00D98EE8 /* SurveyApp.swift */,
-				77B4A57D2911C86A00D98EE8 /* Screenshots */,
 				77B4A5762911ACF000D98EE8 /* ViewModels */,
 				77B4A5752911853C00D98EE8 /* Views */,
 				77B4A5742911851500D98EE8 /* Database */,
 				77B4A573291184F400D98EE8 /* Models */,
 				77B4A572291184DD00D98EE8 /* Helpers */,
+				77B4A57D2911C86A00D98EE8 /* Screenshots */,
 				77B4A53A290D250000D98EE8 /* Assets.xcassets */,
 				77B4A53C290D250000D98EE8 /* Preview Content */,
 			);
@@ -230,6 +230,8 @@
 			dependencies = (
 			);
 			name = Survey;
+			packageProductDependencies = (
+			);
 			productName = Survey;
 			productReference = 77B4A533290D24FE00D98EE8 /* Survey.app */;
 			productType = "com.apple.product-type.application";
@@ -302,6 +304,9 @@
 				Base,
 			);
 			mainGroup = 77B4A52A290D24FE00D98EE8;
+			packageReferences = (
+				26B13490295314BB00F22458 /* XCRemoteSwiftPackageReference "swift-enum-properties" */,
+			);
 			productRefGroup = 77B4A534290D24FE00D98EE8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -683,6 +688,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		26B13490295314BB00F22458 /* XCRemoteSwiftPackageReference "swift-enum-properties" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-enum-properties.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 77B4A52B290D24FE00D98EE8 /* Project object */;
 }
