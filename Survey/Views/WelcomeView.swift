@@ -6,19 +6,22 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct WelcomeView: View {
     @StateObject var store = Store(initialValue: AppState(), reducer: appReducer)
+    @State var isShowingDetailView = false
     
     var body: some View {
         VStack {
-            NavigationLink(destination: QuestionsTabView(), isActive: $store.value.isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
+            NavigationLink(destination: QuestionsTabView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
             
             Spacer()
             
             Button(
                 "Start survey",
                 action: {
+                    isShowingDetailView = true
                     store.send(.welcome(.welcomeTapped))
                 }
             )
