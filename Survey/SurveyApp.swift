@@ -6,13 +6,19 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 @main
 struct SurveyApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationView {
-                WelcomeView()
+                WelcomeView(
+                    store: Store(
+                        initialState: Welcome.State(isShowingDetailView: false),
+                    reducer: Welcome()
+                    )
+                )
             }
         }
     }

@@ -8,14 +8,14 @@
 import Foundation
 import Combine
 
-@MainActor class Database: ObservableObject {
+@MainActor public class Database: ObservableObject {
     let session: URLSession
     
-    init(urlSession: URLSession = .shared) {
+    public init(urlSession: URLSession = .shared) {
         self.session = urlSession
     }
     
-    func getQuestions(completion: @escaping ([Question]) -> Void) async {
+    public func getQuestions(completion: @escaping ([Question]) -> Void) async {
         guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
             print("Invalid URL: https://xm-assignment.web.app/questions")
             return
@@ -32,7 +32,7 @@ import Combine
         }
     }
     
-    func setAnswer(question: Question, completion: (HTTPURLResponse, Bool) -> Void) async {
+    public func setAnswer(question: Question, completion: (HTTPURLResponse, Bool) -> Void) async {
         guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
             print("Invalid URL: https://xm-assignment.web.app/question/submit")
             return

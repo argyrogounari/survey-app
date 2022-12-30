@@ -6,14 +6,16 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct QuestionsTabView: View {
+    let store: StoreOf<QuestionsViewer>
     @StateObject var vm = QuestionsTabViewViewModel()
     
     var body: some View {
         TabView (selection: $vm.currentQuestion) {
-            ForEach(0..<$vm.questions.count, id:\.self) { i in
-                QuestionView(question: $vm.questions[i], numQuestionsSubmitted: $vm.numQuestionsSubmitted)
+        ForEach(0..<$vm.questions.count, id:\.self) { i in
+            QuestionView(question: $vm.questions[i], numQuestionsSubmitted: $vm.numQuestionsSubmitted)
             }
         }
         .swipeActions(content: {})
@@ -49,8 +51,11 @@ struct QuestionsTabView: View {
     }
 }
 
-struct QuestionsTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        QuestionsTabView()
-    }
-}
+//struct QuestionsTabView_Previews: PreviewProvider {
+//    static var previews: some View {
+////        QuestionsTabView(store: Store(initialState: AppState(), reducer: appReducer)
+//
+//
+//        )
+//    }
+//}

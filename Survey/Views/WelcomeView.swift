@@ -9,44 +9,53 @@ import SwiftUI
 import ComposableArchitecture
 
 struct WelcomeView: View {
-    @StateObject var store = Store(initialValue: AppState(), reducer: appReducer)
-    @State var isShowingDetailView = false
+    let store: StoreOf<Welcome>
     
     var body: some View {
-        VStack {
-            NavigationLink(destination: QuestionsTabView(), isActive: $isShowingDetailView) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
-            
-            Spacer()
-            
-            Button(
-                "Start survey",
-                action: {
-                    isShowingDetailView = true
-                    store.send(.welcome(.welcomeTapped))
-                }
+        WithViewStore(self.store, observe: { $0 }) { viewStore in
+            VStack {
+                NavigationLink(destination: QuestionsTabView(store: Store(
+                    initialState: QuestionsViewer.State(),
+                    reducer: QuestionsViewer()
+                )), isActive: viewStore.binding(
+                    get: { $0.isShowingDetailView },
+                    send: .dismissTapped
+                )) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
+                
+                Spacer()
+                
+                Button(
+                    "Start survey",
+                    action: {
+                        viewStore.send(.welcomeTapped)
+                    }
+                )
+                .accessibilityIdentifier("startSurveyButton")
+                .padding(.vertical, 10)
+                .padding(.horizontal, 35)
+                .foregroundColor(Color.blue)
+                .background(Color.white)
+                .cornerRadius(10)
+                
+                Spacer()
+            }
+            .frame(
+                minWidth: 0,
+                maxWidth: .infinity,
+                minHeight: 0,
+                maxHeight: .infinity,
+                alignment: .center
             )
-            .accessibilityIdentifier("startSurveyButton")
-            .padding(.vertical, 10)
-            .padding(.horizontal, 35)
-            .foregroundColor(Color.blue)
-            .background(Color.white)
-            .cornerRadius(10)
-            
-            Spacer()
+            .background(Color("backgroundColor"))
         }
-        .frame(
-            minWidth: 0,
-            maxWidth: .infinity,
-            minHeight: 0,
-            maxHeight: .infinity,
-            alignment: .center
-        )
-        .background(Color("backgroundColor"))
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeView()
+        WelcomeView( store: Store(
+            initialState: Welcome.State(),
+            reducer: Welcome()
+        ))
     }
 }
