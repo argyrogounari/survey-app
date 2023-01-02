@@ -1,6 +1,6 @@
 //
-//  Welcome.swift
-//  Welcome
+//  WelcomeReducer.swift
+//  Survey
 //
 //  Created by Argyro Gounari on 22/12/2022.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct Welcome: ReducerProtocol {
+public struct WelcomeReducer: ReducerProtocol {
     
     public struct State: Equatable {
         var isShowingDetailView = false

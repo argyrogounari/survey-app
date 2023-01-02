@@ -7,17 +7,24 @@
 
 import SwiftUI
 
-struct NotificationBannerModifier: ViewModifier {
+struct NotificationBannerModifier: ViewModifier, Equatable {
+    static func == (lhs: NotificationBannerModifier, rhs: NotificationBannerModifier) -> Bool {
+        if (lhs.data.type == .Fail && rhs.data.type == .Fail || lhs.data.type == .Success && rhs.data.type == .Success) {
+            return true
+        }
+        return false
+    }
+    
     @Binding var data: NotificationBannerData
     @Binding var show: Bool
     var retry: () -> Void
     @State private var makeBannerDisappear: DispatchWorkItem?
     
-    struct NotificationBannerData {
+    struct NotificationBannerData: Equatable {
         let type: NotificationBannerType
     }
     
-    enum NotificationBannerType {
+    enum NotificationBannerType: Equatable {
         case Success
         case Fail
         

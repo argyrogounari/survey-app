@@ -1,6 +1,6 @@
 //
-//  QuestionsViewer.swift
-//  QuestionsViewer
+//  TabViewReducer.swift
+//  Survey
 //
 //  Created by Argyro Gounari on 28/12/2022.
 //
@@ -8,7 +8,7 @@
 import Foundation
 import ComposableArchitecture
 
-public struct QuestionsViewer: ReducerProtocol {
+public struct TabViewReducer: ReducerProtocol {
     let questionsList: () async throws -> [Question]
     
     public struct State: Equatable {
@@ -18,12 +18,6 @@ public struct QuestionsViewer: ReducerProtocol {
         var isNextButtonDisabled = false
         var questions: [Question] = []
     }
-    
-    
-    struct Sdtate: Equatable {
-        var count = 0
-        var numberFactAlert: String?
-      }
 
     public enum Action: Equatable  {
         case previousTapped
@@ -33,6 +27,8 @@ public struct QuestionsViewer: ReducerProtocol {
         case fetchQuestionsAPICall
         case getQuestionsListResponse(TaskResult<[Question]>)
         case questionSelectionChanged
+        case questionModified(question: Question, position: Int)
+        case numQuestionsSubmittedChanged(numQuestionsSubmitted: Int)
     }
     
     public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
@@ -62,6 +58,12 @@ public struct QuestionsViewer: ReducerProtocol {
             state.questions = questionsList
             return .none
         case .getQuestionsListResponse(.failure):
+            return .none
+        case .questionModified(question: let question, position: let position):
+            state.questions[position] = question
+            return .none
+        case .numQuestionsSubmittedChanged(numQuestionsSubmitted: let numQuestionsSubmitted):
+            state.numQuestionsSubmitted = numQuestionsSubmitted
             return .none
         }
     }

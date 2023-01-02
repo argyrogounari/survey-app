@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		26B134E0295B116000F22458 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B134DF295B116000F22458 /* Util.swift */; };
-		26B135A5295EFA5600F22458 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* Welcome.swift */; };
+		26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeReducer.swift */; };
 		26B135A8295EFACE00F22458 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A7295EFACE00F22458 /* Question.swift */; };
 		26B135AD295EFB4D00F22458 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AC295EFB4D00F22458 /* Database.swift */; };
-		26B135AF295EFB7500F22458 /* QuestionsViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AE295EFB7500F22458 /* QuestionsViewer.swift */; };
+		26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AE295EFB7500F22458 /* TabViewReducer.swift */; };
 		26B135B2295EFC4F00F22458 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26B135B1295EFC4F00F22458 /* ComposableArchitecture */; };
+		26B135B52963103500F22458 /* QuestionReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135B42963103500F22458 /* QuestionReducer.swift */; };
 		77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A536290D24FE00D98EE8 /* SurveyApp.swift */; };
 		77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A538290D24FE00D98EE8 /* WelcomeView.swift */; };
 		77B4A53B290D250000D98EE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77B4A53A290D250000D98EE8 /* Assets.xcassets */; };
@@ -63,10 +64,11 @@
 
 /* Begin PBXFileReference section */
 		26B134DF295B116000F22458 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
-		26B135A4295EFA5600F22458 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
+		26B135A4295EFA5600F22458 /* WelcomeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeReducer.swift; sourceTree = "<group>"; };
 		26B135A7295EFACE00F22458 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		26B135AC295EFB4D00F22458 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
-		26B135AE295EFB7500F22458 /* QuestionsViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionsViewer.swift; sourceTree = "<group>"; };
+		26B135AE295EFB7500F22458 /* TabViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewReducer.swift; sourceTree = "<group>"; };
+		26B135B42963103500F22458 /* QuestionReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionReducer.swift; sourceTree = "<group>"; };
 		77B4A533290D24FE00D98EE8 /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		77B4A536290D24FE00D98EE8 /* SurveyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyApp.swift; sourceTree = "<group>"; };
 		77B4A538290D24FE00D98EE8 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
@@ -140,8 +142,9 @@
 		26B135B32962E28A00F22458 /* Reducers */ = {
 			isa = PBXGroup;
 			children = (
-				26B135A4295EFA5600F22458 /* Welcome.swift */,
-				26B135AE295EFB7500F22458 /* QuestionsViewer.swift */,
+				26B135A4295EFA5600F22458 /* WelcomeReducer.swift */,
+				26B135AE295EFB7500F22458 /* TabViewReducer.swift */,
+				26B135B42963103500F22458 /* QuestionReducer.swift */,
 			);
 			path = Reducers;
 			sourceTree = "<group>";
@@ -391,12 +394,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26B135A5295EFA5600F22458 /* Welcome.swift in Sources */,
+				26B135B52963103500F22458 /* QuestionReducer.swift in Sources */,
+				26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */,
 				77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */,
 				77B4A561290D2DFE00D98EE8 /* ColorHelper.swift in Sources */,
 				77B4A56B290F109200D98EE8 /* QuestionView.swift in Sources */,
 				26B134E0295B116000F22458 /* Util.swift in Sources */,
-				26B135AF295EFB7500F22458 /* QuestionsViewer.swift in Sources */,
+				26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */,
 				77B4A569290D7C2C00D98EE8 /* QuestionsTabView.swift in Sources */,
 				77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */,
 				26B135A8295EFACE00F22458 /* Question.swift in Sources */,

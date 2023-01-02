@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct QuestionView: View {
+    let store: StoreOf<TabViewReducer>
     @StateObject var vm = QuestionViewModel()
     @Binding var question: Question
     @Binding var numQuestionsSubmitted: Int

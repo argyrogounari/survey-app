@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct QuestionsTabView: View {
-    let store: StoreOf<QuestionsViewer>
+    let store: StoreOf<TabViewReducer>
     
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -18,12 +18,12 @@ struct QuestionsTabView: View {
                 send: .questionOnDisplayChanged
             )) {
                 ForEach(0..<viewStore.questions.count, id:\.self) { i in
-                    QuestionView(question: viewStore.binding(
+                    QuestionView(store: store, question: viewStore.binding(
                         get: { $0.questions[i] },
-                        send: .questionSelectionChanged
+                        send: { .questionModified(question: $0, position: i) }
                     ), numQuestionsSubmitted: viewStore.binding(
-                        get: { $0.numQuestionsSubmitted },
-                        send: .questionSelectionChanged
+                        get: { $0.numQuestionsSubmitted },x
+                        send: { .numQuestionsSubmittedChanged(numQuestionsSubmitted: $0) }
                     ))
                 }
             }
@@ -63,7 +63,7 @@ struct QuestionsTabView: View {
 
 struct QuestionsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionsTabView(store: Store(initialState: QuestionsViewer.State(), reducer: QuestionsViewer(questionsList: Database().getQuestions))
+        QuestionsTabView(store: Store(initialState: TabViewReducer.State(), reducer: TabViewReducer(questionsList: Database().getQuestions))
         )
     }
 }
