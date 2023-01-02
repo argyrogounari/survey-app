@@ -15,20 +15,24 @@ import Combine
         self.session = urlSession
     }
     
-    public func getQuestions(completion: @escaping ([Question]) -> Void) async {
-        guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
-            print("Invalid URL: https://xm-assignment.web.app/questions")
-            return
+    public func getQuestions() async throws -> [Question] {
+        let fetchTask = Task { () -> [Question] in
+            guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
+                print("Invalid URL: https://xm-assignment.web.app/questions")
+                return []
+            }
+            let (data, _) = try await self.session.data(from: url)
+            let questions = try? JSONDecoder().decode([Question].self, from: data)
+            return questions!
         }
         
-        do {
-            let (data, _) = try await session.data(from: url)
-            
-            if let questions = try? JSONDecoder().decode([Question].self, from: data) {
-                completion(questions)
-            }
-        } catch {
-            print("Failed to get questions: \(error)")
+        let result = await fetchTask.result
+        
+        switch result {
+            case .success(let questions):
+                return questions
+            case .failure(let error):
+                throw error
         }
     }
     
@@ -61,3 +65,4 @@ import Combine
         }
     }
 }
+

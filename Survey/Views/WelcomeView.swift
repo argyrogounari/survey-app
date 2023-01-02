@@ -16,7 +16,7 @@ struct WelcomeView: View {
             VStack {
                 NavigationLink(destination: QuestionsTabView(store: Store(
                     initialState: QuestionsViewer.State(),
-                    reducer: QuestionsViewer()
+                    reducer: QuestionsViewer(questionsList: Database().getQuestions)
                 )), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped
