@@ -14,30 +14,18 @@ struct QuestionsTabView: View {
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             TabView (selection: viewStore.binding(
-                get: { $0.currentQuestion },
-                send: .questionOnDisplayChanged
+                get: { $0.currentQuestionTag },
+                send: { .questionOnDisplayChanged(currentQuestionTag: $0) }
             )) {
                 ForEach(0..<viewStore.questions.count, id:\.self) { i in
-                    QuestionView(store: Store(
-                        initialState: QuestionReducer.State(),
-                        reducer: QuestionReducer(setAnswerAPICall: Database().setAnswer)
-                    ), question: viewStore.binding(
-                        get: { $0.questions[i] },
-                        send: { .questionModified(question: $0, position: i) }
-                    ), numQuestionsSubmitted: viewStore.binding(
-                        get: { $0.numQuestionsSubmitted },
-                        send: { .numQuestionsSubmittedChanged(numQuestionsSubmitted: $0) }
-                    ))
+                    QuestionView(store: store).tag(viewStore.questions[i].id)
                 }
             }
             .swipeActions(content: {})
             .swipeActions(allowsFullSwipe: false, content: {})
             .tabViewStyle(.page(indexDisplayMode: .never))
             .edgesIgnoringSafeArea(.vertical)
-            .onChange(of: viewStore.currentQuestion) { _ in
-                viewStore.send(.questionOnDisplayChanged)
-            }
-            .navigationTitle("Question \(viewStore.currentQuestion)/\(viewStore.questions.count)")
+            .navigationTitle("Question \(viewStore.currentQuestionTag)/\(viewStore.questions.count)")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
@@ -66,7 +54,11 @@ struct QuestionsTabView: View {
 
 struct QuestionsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        QuestionsTabView(store: Store(initialState: TabViewReducer.State(), reducer: TabViewReducer(questionsList: Database().getQuestions))
-        )
+        QuestionsTabView(store: Store(
+            initialState: TabViewReducer.State(),
+            reducer: TabViewReducer(
+                questionsList: Database().getQuestions,
+                setAnswerAPICall: Database().setAnswer)
+        ))
     }
 }

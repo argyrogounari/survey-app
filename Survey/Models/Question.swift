@@ -18,6 +18,11 @@ public class Question: ObservableObject, Codable, Identifiable, Equatable {
         case answer
     }
     
+    public init() {
+        id = 0
+        question = ""
+    }
+    
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
