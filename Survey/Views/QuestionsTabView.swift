@@ -18,11 +18,14 @@ struct QuestionsTabView: View {
                 send: .questionOnDisplayChanged
             )) {
                 ForEach(0..<viewStore.questions.count, id:\.self) { i in
-                    QuestionView(store: store, question: viewStore.binding(
+                    QuestionView(store: Store(
+                        initialState: QuestionReducer.State(),
+                        reducer: QuestionReducer(setAnswerAPICall: Database().setAnswer)
+                    ), question: viewStore.binding(
                         get: { $0.questions[i] },
                         send: { .questionModified(question: $0, position: i) }
                     ), numQuestionsSubmitted: viewStore.binding(
-                        get: { $0.numQuestionsSubmitted },x
+                        get: { $0.numQuestionsSubmitted },
                         send: { .numQuestionsSubmittedChanged(numQuestionsSubmitted: $0) }
                     ))
                 }

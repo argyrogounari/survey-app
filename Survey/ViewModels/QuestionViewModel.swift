@@ -22,18 +22,18 @@ import SwiftUI
     
     func submitAnswer(question: Question, completion: @escaping (Bool) -> Void) {
         Task {
-            await Database().setAnswer(question: question) {_, isSuccesful in
-                if (isSuccesful) {
-                    showSuccessNotificationBanner = true
-                    submitButtonText = "Already submitted"
-                    disableSubmitButton()
-                    answerTextFieldColor = Color.gray
-                    answerTextFieldDisabled = true
-                    completion(isSuccesful)
-                } else {
-                    showFailNotificationBanner = true
-                }
-            }
+//            await Database().setAnswer(question: question) {_, isSuccesful in
+//                if (isSuccesful) {
+//                    showSuccessNotificationBanner = true
+//                    submitButtonText = "Already submitted"
+//                    disableSubmitButton()
+//                    answerTextFieldColor = Color.gray
+//                    answerTextFieldDisabled = true
+//                    completion(isSuccesful)
+//                } else {
+//                    showFailNotificationBanner = true
+//                }
+//            }
         }
     }
     

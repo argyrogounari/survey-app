@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 
+enum APIError: Error {
+    case runtimeError(String)
+}
+
 @MainActor public class Database: ObservableObject {
     let session: URLSession
     
@@ -18,8 +22,7 @@ import Combine
     public func getQuestions() async throws -> [Question] {
         let fetchTask = Task { () -> [Question] in
             guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
-                print("Invalid URL: https://xm-assignment.web.app/questions")
-                return []
+                throw APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/questions")
             }
             let (data, _) = try await self.session.data(from: url)
             let questions = try? JSONDecoder().decode([Question].self, from: data)
@@ -36,32 +39,37 @@ import Combine
         }
     }
     
-    public func setAnswer(question: Question, completion: (HTTPURLResponse, Bool) -> Void) async {
-        guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
-            print("Invalid URL: https://xm-assignment.web.app/question/submit")
-            return
-        }
-        
-        guard let encoded = try? JSONEncoder().encode(question) else {
-            print("Failed to encode question.")
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        do {
+    public func setAnswer(question: Question)  async throws -> HTTPURLResponse {
+        let setTask = Task { () -> HTTPURLResponse in
+            guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
+                throw APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/question/submit")
+            }
+            guard let encoded = try? JSONEncoder().encode(question) else {
+                throw APIError.runtimeError("Failed to encode question.")
+            }
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
             let (_, response) = try await session.upload(for: request, from: encoded)
             if let httpResponse = response as? HTTPURLResponse {
-                if (httpResponse.statusCode == 200) {
-                    completion(httpResponse, true)
-                    return
-                }
-                completion(httpResponse, false)
-                return
+//                if (httpResponse.statusCode == 200) {
+//                    completion(httpResponse, true)
+//                    return
+//                }
+//                completion(httpResponse, false)
+                
+                return httpResponse
             }
-        } catch {
-            print("Failed to submit answer: \(error)")
+            
+            throw APIError.runtimeError("Could not set answer.")
+        }
+        
+        let result = await setTask.result
+        
+        switch result {
+            case .success(let response):
+                return response
+            case .failure(let error):
+                throw error
         }
     }
 }
