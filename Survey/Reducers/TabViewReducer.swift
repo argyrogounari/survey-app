@@ -29,8 +29,8 @@ public struct TabViewReducer: ReducerProtocol {
         var answerTextFieldDisabled = false
         var showFailNotificationBanner: Bool = false
         var showSuccessNotificationBanner: Bool = false
-        var notificationBannerFail: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Fail)
-        var notificationBannerSuccess: NotificationBannerModifier.NotificationBannerData = NotificationBannerModifier.NotificationBannerData(type: .Success)
+//        var notificationBannerFail: NotificationBannerType = NotificationBannerType.fail(retry: Database.setAnswer)
+//        var notificationBannerSuccess: NotificationBannerType = NotificationBannerType.success
     }
 
     public enum Action: Equatable  {
@@ -50,6 +50,8 @@ public struct TabViewReducer: ReducerProtocol {
         case setSubmitButtonAppearance(answer: String)
         case setSumbitButtonDisabled
         case setSubmitButtonEnabled
+        
+        case notificationBannerDismissed
     }
     
     public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
@@ -103,6 +105,7 @@ public struct TabViewReducer: ReducerProtocol {
                 state.submitButtonText = "Already submitted"
                 state.answerTextFieldColor = Color.gray
                 state.answerTextFieldDisabled = true
+                state.numQuestionsSubmitted += 1
                 return Effect(value: .setSumbitButtonDisabled)
             } else {
                 return Effect(value: .submitAnswerResponse(TaskResult.failure(APIError.runtimeError("Failed to set answer"))))
@@ -126,10 +129,13 @@ public struct TabViewReducer: ReducerProtocol {
             state.submitButtonBackgroundColor = Color.white
             state.submitButtonDisabled = false
             return .none
+        case .notificationBannerDismissed:
+            state.showSuccessNotificationBanner = false
+            state.showFailNotificationBanner = false
+            return .none
         }
     }
 }
-
 
 
 

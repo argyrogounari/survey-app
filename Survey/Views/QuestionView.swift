@@ -37,17 +37,11 @@ struct QuestionView: View {
                     .padding([.leading, .trailing], 20)
                     .foregroundColor(viewStore.answerTextFieldColor)
                     .disabled(viewStore.answerTextFieldDisabled)
-//                    .onChange(of: viewStore.question.answer) { _ in
-//                        viewStore.send(.setSubmitButtonAppearance(answer: viewStore.question.answer))
-//                    }
                     .accessibilityIdentifier("answerTextField")
                 HStack {
                     Spacer()
                     Button(viewStore.submitButtonText, action: {
                         viewStore.send(.submitButtonClicked(question: viewStore.questionInView))
-//                        vm.submitAnswer(question: question) { isSuccesful in
-//                            numQuestionsSubmitted += 1 // TODO
-//                        }
                     })
                     .padding([.top, .bottom], 10)
                     .padding([.leading, .trailing], 35)
@@ -60,10 +54,15 @@ struct QuestionView: View {
                 }
                 Spacer()
             }
-
             .background(Rectangle().fill(Color("backgroundColor")))
-//            .notificatioBanner(data: $vm.notificationBannerSuccess, show: $vm.showSuccessNotificationBanner, retry: {})
-//            .notificatioBanner(data: $vm.notificationBannerFail, show: $vm.showFailNotificationBanner, retry:  {vm.submitAnswer(question: question, completion: {isSuccessflul in numQuestionsSubmitted += 1})})
+            .notificatioBanner(type: NotificationBannerType.success, isActive: viewStore.binding(
+                                    get: { $0.showSuccessNotificationBanner },
+                                    send: .notificationBannerDismissed
+                                ))
+            .notificatioBanner(type: NotificationBannerType.fail, isActive: viewStore.binding(
+                                    get: { $0.showFailNotificationBanner },
+                                    send: .notificationBannerDismissed
+                                ))
         }
     }
 }

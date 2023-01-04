@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		26B134E0295B116000F22458 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B134DF295B116000F22458 /* Util.swift */; };
 		26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeReducer.swift */; };
 		26B135A8295EFACE00F22458 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A7295EFACE00F22458 /* Question.swift */; };
 		26B135AD295EFB4D00F22458 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AC295EFB4D00F22458 /* Database.swift */; };
@@ -61,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		26B134DF295B116000F22458 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		26B135A4295EFA5600F22458 /* WelcomeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeReducer.swift; sourceTree = "<group>"; };
 		26B135A7295EFACE00F22458 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		26B135AC295EFB4D00F22458 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
@@ -209,7 +207,6 @@
 		77B4A572291184DD00D98EE8 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				26B134DF295B116000F22458 /* Util.swift */,
 				77B4A560290D2DFE00D98EE8 /* ColorHelper.swift */,
 			);
 			path = Helpers;
@@ -384,7 +381,6 @@
 				77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */,
 				77B4A561290D2DFE00D98EE8 /* ColorHelper.swift in Sources */,
 				77B4A56B290F109200D98EE8 /* QuestionView.swift in Sources */,
-				26B134E0295B116000F22458 /* Util.swift in Sources */,
 				26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */,
 				77B4A569290D7C2C00D98EE8 /* QuestionsTabView.swift in Sources */,
 				77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */,

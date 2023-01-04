@@ -7,98 +7,73 @@
 
 import SwiftUI
 
-struct NotificationBannerModifier: ViewModifier, Equatable {
-    static func == (lhs: NotificationBannerModifier, rhs: NotificationBannerModifier) -> Bool {
-        if (lhs.data.type == .Fail && rhs.data.type == .Fail || lhs.data.type == .Success && rhs.data.type == .Success) {
-            return true
-        }
-        return false
-    }
-    
-    @Binding var data: NotificationBannerData
-    @Binding var show: Bool
-    var retry: () -> Void
+enum NotificationBannerType {
+    case success
+    case fail // (retry: Binding<Bool>)
+}
+
+struct NotificationBannerModifier: ViewModifier {
+    private var title: String
+    private var backgroundColor: Color
+    @Binding private var isActive: Bool
     @State private var makeBannerDisappear: DispatchWorkItem?
     
-    struct NotificationBannerData: Equatable {
-        let type: NotificationBannerType
-    }
-    
-    enum NotificationBannerType: Equatable {
-        case Success
-        case Fail
-        
-        var title: String {
-            switch self {
-            case .Success:
-                return "Success!"
-            case .Fail:
-                return "Failure!"
-            }
+    init(type: NotificationBannerType, isActive: Binding<Bool>) {
+        switch type {
+        case .success:
+            self.title = "Success!"
+            self.backgroundColor = Color.green
+        case .fail:
+            self.title = "Fail!"
+            self.backgroundColor = Color.red
         }
         
-        var buttonText: String {
-            switch self {
-            case .Success:
-                return ""
-            case .Fail:
-                return "RETRY"
-            }
-        }
-        
-        var backgroundColor: Color {
-            switch self {
-            case .Success:
-                return Color.green
-            case .Fail:
-                return Color.red
-            }
-        }
+        self._isActive = isActive
     }
     
     func body(content: Content) -> some View {
         ZStack {
             content
-            if (show) {
+            if (isActive) {
                 VStack {
                     HStack {
-                        Text(data.type.title)
+                        Text(title)
                             .bold()
                             .font(.title)
                         Spacer()
-                        if (data.type == .Fail) {
-                            Button(action: {
-                                makeBannerDisappear?.cancel()
-                                self.show = false
-                                self.retry()
-                            }){
-                                HStack {
-                                    Text(data.type.buttonText)
-                                        .bold()
-                                }
-                                .padding(10)
-                                .foregroundColor(.white)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(Color.white, lineWidth: 2)
-                                )
-                            }
-                        }
+//                        if (retry != nil) {
+//                            Button(action: {
+//                                makeBannerDisappear?.cancel()
+//                                self.isActive = false
+//                                self.retry = true
+//                            }){
+//                                HStack {
+//                                    Text("RETRY")
+//                                        .bold()
+//                                }
+//                                .padding(10)
+//                                .foregroundColor(.white)
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 10)
+//                                        .stroke(Color.white, lineWidth: 2)
+//                                )
+//                            }
+//                        }
                     }
                     .padding(12)
-                    .background(data.type.backgroundColor)
+                    .background(backgroundColor)
                     .cornerRadius(8)
                     Spacer()
                 }
                 .onTapGesture {
                     withAnimation {
-                        self.show = false
+                        self.isActive = false
                         makeBannerDisappear?.cancel()
                     }
                 }.onAppear(perform: {
                     makeBannerDisappear = DispatchWorkItem {
                         withAnimation {
-                            self.show = false
+                            self.isActive = false
                         }
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: makeBannerDisappear!)
@@ -112,8 +87,8 @@ struct NotificationBannerModifier: ViewModifier, Equatable {
 }
 
 extension View {
-    func notificatioBanner(data: Binding<NotificationBannerModifier.NotificationBannerData>, show: Binding<Bool>, retry: @escaping () -> Void) -> some View {
-        self.modifier(NotificationBannerModifier(data: data, show: show, retry: retry))
+    func notificatioBanner(type: NotificationBannerType, isActive: Binding<Bool>) -> some View {
+        self.modifier(NotificationBannerModifier(type: type, isActive: isActive))
     }
 }
 
