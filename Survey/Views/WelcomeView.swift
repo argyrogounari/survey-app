@@ -18,8 +18,7 @@ struct WelcomeView: View {
                     initialState: TabViewState(),
                     reducer: tabViewReducer,
                     environment: TabViewEnvironment(
-                    questionsList: Database().getQuestions,
-                    setAnswerAPICall: Database().setAnswer)
+                    questionsList: Database().getQuestions)
                 )), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped

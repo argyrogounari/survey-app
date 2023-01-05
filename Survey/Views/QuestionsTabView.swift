@@ -12,14 +12,22 @@ struct QuestionsTabView: View {
     let store: Store<TabViewState, TabViewAction>
     
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(store) { viewStore in
             TabView (selection: viewStore.binding(
                 get: { $0.currentQuestionTag },
                 send: { .questionOnDisplayChanged(currentQuestionTag: $0) }
             )) {
-                ForEach(0..<viewStore.questions.count, id:\.self) { i in
-                    QuestionView(store: store).tag(viewStore.questions[i].id)
+                ForEachStore(
+                    store.scope(
+                        state: \.questions,
+                        action: TabViewAction.question
+                    )
+                ){
+                    questionStore in
+                    QuestionView(store: questionStore)
+                        .tag(viewStore.questions.id)
                 }
+                
             }
             .swipeActions(content: {})
             .swipeActions(allowsFullSwipe: false, content: {})
@@ -58,11 +66,7 @@ struct QuestionsTabView_Previews: PreviewProvider {
             initialState: TabViewState(),
             reducer: tabViewReducer,
             environment: TabViewEnvironment(
-            questionsList: Database().getQuestions,
-            setAnswerAPICall: Database().setAnswer)
+            questionsList: Database().getQuestions)
         ))
     }
 }
-                         
-                         
-                         

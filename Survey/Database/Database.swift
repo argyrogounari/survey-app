@@ -7,12 +7,13 @@
 
 import Foundation
 import Combine
+import ComposableArchitecture
 
-enum APIError: Error {
+enum APIError: Error, Equatable {
     case runtimeError(String)
 }
 
-@MainActor public class Database: ObservableObject {
+public class Database: ObservableObject {
     let session: URLSession
     
     public init(urlSession: URLSession = .shared) {
@@ -32,45 +33,33 @@ enum APIError: Error {
         let result = await fetchTask.result
         
         switch result {
-            case .success(let questions):
-                return questions
-            case .failure(let error):
-                throw error
+        case .success(let questions):
+            return questions
+        case .failure(let error):
+            throw error
         }
     }
     
-    public func setAnswer(question: Question)  async throws -> HTTPURLResponse {
-        let setTask = Task { () -> HTTPURLResponse in
-            guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
-                throw APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/question/submit")
-            }
-            guard let encoded = try? JSONEncoder().encode(question) else {
-                throw APIError.runtimeError("Failed to encode question.")
-            }
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            let (_, response) = try await session.upload(for: request, from: encoded)
-            if let httpResponse = response as? HTTPURLResponse {
-//                if (httpResponse.statusCode == 200) {
-//                    completion(httpResponse, true)
-//                    return
-//                }
-//                completion(httpResponse, false)
-                
-                return httpResponse
-            }
+    func setAnswer(question: Question)  -> Effect<HTTPURLResponse, APIError> {
+        guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
+            return Effect(error: APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/question/submit"))
             
-            throw APIError.runtimeError("Could not set answer.")
         }
-        
-        let result = await setTask.result
-        
-        switch result {
-            case .success(let response):
-                return response
-            case .failure(let error):
-                throw error
+        guard let encoded = try? JSONEncoder().encode(question) else {
+            return Effect(error: APIError.runtimeError("Failed to encode question."))
         }
+        var request = URLRequest(url: url)
+        request.httpBody = encoded
+        request.httpMethod = "POST"
+        let response = session.dataTaskPublisher(for: request).mapError({_ in
+            APIError.runtimeError("URL session failed.")
+        })
+        return response.flatMap({ _ , response -> Effect<HTTPURLResponse, APIError> in
+            if let httpResponse = response as? HTTPURLResponse {
+                return Effect(value: httpResponse)
+            }
+            return Effect(error: APIError.runtimeError("Could not set answer."))
+        }).eraseToEffect()
     }
 }
 

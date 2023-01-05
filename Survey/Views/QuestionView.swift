@@ -9,7 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 
 struct QuestionView: View {
-    let store: Store<TabViewState, TabViewAction>
+    let store: Store<QuestionState, QuestionAction>
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
@@ -21,7 +21,7 @@ struct QuestionView: View {
                         .frame(maxWidth: .infinity)
                         .background(Rectangle().fill(Color.yellow))
                         .accessibilityIdentifier("questionsSubmittedText")
-                    Text(viewStore.questionInView.question)
+                    Text(viewStore.question.question)
                         .bold()
                         .frame(maxWidth: .infinity)
                         .padding([.top, .bottom], 40)
@@ -30,7 +30,7 @@ struct QuestionView: View {
                 }.background(Rectangle().fill(Color("backgroundColor")))
                 TextField("Type here for an answer",
                           text: viewStore.binding(
-                            get: { $0.questionInView.answer },
+                            get: { $0.question.answer },
                             send: { .setSubmitButtonAppearance(answer: $0) }
                         ))
                     .padding([.top, .bottom], 40)
@@ -41,7 +41,7 @@ struct QuestionView: View {
                 HStack {
                     Spacer()
                     Button(viewStore.submitButtonText, action: {
-                        viewStore.send(.submitButtonClicked(question: viewStore.questionInView))
+                        viewStore.send(.submitButtonClicked(question: viewStore.question))
                     })
                     .padding([.top, .bottom], 10)
                     .padding([.leading, .trailing], 35)
