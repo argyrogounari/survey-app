@@ -20,17 +20,10 @@ public struct QuestionState: Equatable, Identifiable {
     public var id: Int {
         question.id
     }
-    
     var numQuestionsSubmitted = 0
     var question: Question
-    
-    // submitbutton
-    var submitButtonText = "Submit"
-    var submitButtonForegroundColor = Color.gray
-    var submitButtonBackgroundColor = Color.gray.opacity(0.2)
-    var submitButtonDisabled = true
-    var answerTextFieldColor = Color.black
-    var answerTextFieldDisabled = false
+    var submitButtonState: SubmitButtonState = .disableQuestionNotSubmitted
+    var answerTextFieldState: AnswerTextFieldState = .enabled
     var showFailNotificationBanner: Bool = false
     var showSuccessNotificationBanner: Bool = false
     
@@ -56,11 +49,7 @@ enum QuestionAction: Equatable  {
     case submitAnswer(question: Question)
     case submitAnswerResponse(Result<HTTPURLResponse, APIError>)
     case setSubmitButtonAppearance(answer: String)
-    case setSumbitButtonDisabled
-    case setSubmitButtonEnabled
-    
     case numQuestionsSubmittedChanged(numQuestionsSubmitted: Int)
-    
     case notificationBannerDismissed
 }
 
@@ -78,11 +67,10 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
     case let .submitAnswerResponse(.success(httpUrlResponse)):
         if (httpUrlResponse.statusCode == 200) {
             state.showSuccessNotificationBanner = true
-            state.submitButtonText = "Already submitted"
-            state.answerTextFieldColor = Color.gray
-            state.answerTextFieldDisabled = true
             state.numQuestionsSubmitted += 1
-            return Effect(value: .setSumbitButtonDisabled)
+            state.submitButtonState = .disableQuestionSubmitted
+            state.answerTextFieldState = .disabled
+            return .none
         } else {
             return Effect(value: .submitAnswerResponse(Result.failure(APIError.runtimeError("Failed to set answer"))))
         }
@@ -91,20 +79,12 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
         return .none
     case .setSubmitButtonAppearance(answer: let answer):
         if (answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
-            return Effect(value: .setSumbitButtonDisabled)
+            state.submitButtonState = .disableQuestionNotSubmitted
+            return .none
         } else {
-            return Effect(value: .setSubmitButtonEnabled)
+            state.submitButtonState = .enabled
+            return .none
         }
-    case .setSumbitButtonDisabled:
-        state.submitButtonForegroundColor = Color.gray
-        state.submitButtonBackgroundColor = Color.gray.opacity(0.2)
-        state.submitButtonDisabled = true
-        return .none
-    case .setSubmitButtonEnabled:
-        state.submitButtonForegroundColor = Color.blue
-        state.submitButtonBackgroundColor = Color.white
-        state.submitButtonDisabled = false
-        return .none
     case .notificationBannerDismissed:
         state.showSuccessNotificationBanner = false
         state.showFailNotificationBanner = false

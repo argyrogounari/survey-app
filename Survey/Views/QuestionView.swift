@@ -8,9 +8,57 @@
 import SwiftUI
 import ComposableArchitecture
 
+enum AnswerTextFieldState {
+    case enabled
+    case disabled
+}
+
+enum SubmitButtonState {
+    case enabled
+    case disableQuestionNotSubmitted
+    case disableQuestionSubmitted
+}
+
 struct QuestionView: View {
     let store: Store<QuestionState, QuestionAction>
+    @State var answerTextFieldColor = Color.black
+    @State var answerTextFieldDisabled = false
+    @State var submitButtonText = "Submit"
+    @State var submitButtonForegroundColor = Color.gray
+    @State var submitButtonBackgroundColor = Color.gray.opacity(0.2)
+    @State var submitButtonDisabled = true
     
+    func changeAnswerTextFieldAppearance(state: AnswerTextFieldState) {
+        switch state {
+        case .enabled:
+            answerTextFieldColor = Color.black
+            answerTextFieldDisabled = false
+        case .disabled:
+            answerTextFieldColor = Color.gray
+            answerTextFieldDisabled = true
+        }
+    }
+    
+    func changeSubmitButtonAppearance(state: SubmitButtonState) {
+        switch state {
+        case .enabled:
+            submitButtonText = "Submit"
+            submitButtonForegroundColor = Color.blue
+            submitButtonBackgroundColor = Color.white
+            submitButtonDisabled = false
+        case .disableQuestionNotSubmitted:
+            submitButtonText = "Submit"
+            submitButtonForegroundColor = Color.gray
+            submitButtonBackgroundColor = Color.gray.opacity(0.2)
+            submitButtonDisabled = true
+        case .disableQuestionSubmitted:
+            submitButtonText = "Already submitted"
+            submitButtonForegroundColor = Color.gray
+            submitButtonBackgroundColor = Color.gray.opacity(0.2)
+            submitButtonDisabled = true
+        }
+    }
+
     var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack (alignment: .leading) {
@@ -35,26 +83,32 @@ struct QuestionView: View {
                         ))
                     .padding([.top, .bottom], 40)
                     .padding([.leading, .trailing], 20)
-                    .foregroundColor(viewStore.answerTextFieldColor)
-                    .disabled(viewStore.answerTextFieldDisabled)
+                    .foregroundColor(answerTextFieldColor)
+                    .disabled(answerTextFieldDisabled)
                     .accessibilityIdentifier("answerTextField")
                 HStack {
                     Spacer()
-                    Button(viewStore.submitButtonText, action: {
+                    Button(submitButtonText, action: {
                         viewStore.send(.submitButtonClicked(question: viewStore.question))
                     })
                     .padding([.top, .bottom], 10)
                     .padding([.leading, .trailing], 35)
-                    .foregroundColor(viewStore.submitButtonForegroundColor)
-                    .background(viewStore.submitButtonBackgroundColor)
+                    .foregroundColor(submitButtonForegroundColor)
+                    .background(submitButtonBackgroundColor)
                     .cornerRadius(10)
-                    .disabled(viewStore.submitButtonDisabled)
+                    .disabled(submitButtonDisabled)
                     .accessibilityIdentifier("submitButton")
                     Spacer()
                 }
                 Spacer()
             }
             .background(Rectangle().fill(Color("backgroundColor")))
+            .onChange(of: viewStore.submitButtonState,
+                      perform: changeSubmitButtonAppearance(state:)
+            )
+            .onChange(of: viewStore.answerTextFieldState,
+                      perform: changeAnswerTextFieldAppearance(state:)
+            )
             .notificatioBanner(type: NotificationBannerType.success, isActive: viewStore.binding(
                                     get: { $0.showSuccessNotificationBanner },
                                     send: .notificationBannerDismissed
