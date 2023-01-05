@@ -9,14 +9,17 @@ import SwiftUI
 import ComposableArchitecture
 
 struct WelcomeView: View {
-    let store: StoreOf<WelcomeReducer>
+    let store: Store<WelcomeState, WelcomeAction>
     
     var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithViewStore(self.store) { viewStore in
             VStack {
                 NavigationLink(destination: QuestionsTabView(store: Store(
-                    initialState: TabViewReducer.State(),
-                    reducer: TabViewReducer(questionsList: Database().getQuestions, setAnswerAPICall: Database().setAnswer)
+                    initialState: TabViewState(),
+                    reducer: tabViewReducer,
+                    environment: TabViewEnvironment(
+                    questionsList: Database().getQuestions,
+                    setAnswerAPICall: Database().setAnswer)
                 )), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped
@@ -53,9 +56,7 @@ struct WelcomeView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeView( store: Store(
-            initialState: WelcomeReducer.State(),
-            reducer: WelcomeReducer()
+        WelcomeView( store: Store(initialState: WelcomeState(), reducer: welcomeReducer, environment: WelcomeEnvironment()
         ))
     }
 }

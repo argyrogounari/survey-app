@@ -15,9 +15,10 @@ struct SurveyApp: App {
             NavigationView {
                 WelcomeView(
                     store: Store(
-                        initialState: WelcomeReducer.State(isShowingDetailView: false),
-                    reducer: WelcomeReducer()
-                    )
+                        initialState: WelcomeState(),
+                        reducer: welcomeReducer,
+                        environment: WelcomeEnvironment()
+                        )
                 )
             }
         }

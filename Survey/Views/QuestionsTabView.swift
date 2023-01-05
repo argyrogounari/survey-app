@@ -9,10 +9,10 @@ import SwiftUI
 import ComposableArchitecture
 
 struct QuestionsTabView: View {
-    let store: StoreOf<TabViewReducer>
+    let store: Store<TabViewState, TabViewAction>
     
     var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithViewStore(self.store) { viewStore in
             TabView (selection: viewStore.binding(
                 get: { $0.currentQuestionTag },
                 send: { .questionOnDisplayChanged(currentQuestionTag: $0) }
@@ -55,10 +55,14 @@ struct QuestionsTabView: View {
 struct QuestionsTabView_Previews: PreviewProvider {
     static var previews: some View {
         QuestionsTabView(store: Store(
-            initialState: TabViewReducer.State(),
-            reducer: TabViewReducer(
-                questionsList: Database().getQuestions,
-                setAnswerAPICall: Database().setAnswer)
+            initialState: TabViewState(),
+            reducer: tabViewReducer,
+            environment: TabViewEnvironment(
+            questionsList: Database().getQuestions,
+            setAnswerAPICall: Database().setAnswer)
         ))
     }
 }
+                         
+                         
+                         

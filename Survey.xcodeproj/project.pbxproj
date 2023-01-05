@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26062BB02965DE380087AD36 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26062BAF2965DE380087AD36 /* ComposableArchitecture */; };
+		26062BB32965E0A30087AD36 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 26062BB22965E0A30087AD36 /* CombineSchedulers */; };
 		26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeReducer.swift */; };
 		26B135A8295EFACE00F22458 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A7295EFACE00F22458 /* Question.swift */; };
 		26B135AD295EFB4D00F22458 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AC295EFB4D00F22458 /* Database.swift */; };
 		26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AE295EFB7500F22458 /* TabViewReducer.swift */; };
-		26B135B2295EFC4F00F22458 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26B135B1295EFC4F00F22458 /* ComposableArchitecture */; };
 		77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A536290D24FE00D98EE8 /* SurveyApp.swift */; };
 		77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A538290D24FE00D98EE8 /* WelcomeView.swift */; };
 		77B4A53B290D250000D98EE8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77B4A53A290D250000D98EE8 /* Assets.xcassets */; };
@@ -89,7 +90,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26B135B2295EFC4F00F22458 /* ComposableArchitecture in Frameworks */,
+				26062BB32965E0A30087AD36 /* CombineSchedulers in Frameworks */,
+				26062BB02965DE380087AD36 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +254,8 @@
 			);
 			name = Survey;
 			packageProductDependencies = (
-				26B135B1295EFC4F00F22458 /* ComposableArchitecture */,
+				26062BAF2965DE380087AD36 /* ComposableArchitecture */,
+				26062BB22965E0A30087AD36 /* CombineSchedulers */,
 			);
 			productName = Survey;
 			productReference = 77B4A533290D24FE00D98EE8 /* Survey.app */;
@@ -327,9 +330,8 @@
 			);
 			mainGroup = 77B4A52A290D24FE00D98EE8;
 			packageReferences = (
-				26B13490295314BB00F22458 /* XCRemoteSwiftPackageReference "swift-enum-properties" */,
-				26B13599295C731800F22458 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
-				26B1359E295EF4F100F22458 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				26062BA82965DC8C0087AD36 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				26062BB12965E0A30087AD36 /* XCRemoteSwiftPackageReference "combine-schedulers" */,
 			);
 			productRefGroup = 77B4A534290D24FE00D98EE8 /* Products */;
 			projectDirPath = "";
@@ -713,37 +715,34 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		26B13490295314BB00F22458 /* XCRemoteSwiftPackageReference "swift-enum-properties" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-enum-properties.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
-		26B13599295C731800F22458 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		26062BA82965DC8C0087AD36 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.0;
+				kind = exactVersion;
+				version = 0.39.0;
 			};
 		};
-		26B1359E295EF4F100F22458 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		26062BB12965E0A30087AD36 /* XCRemoteSwiftPackageReference "combine-schedulers" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			repositoryURL = "https://github.com/pointfreeco/combine-schedulers";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = exactVersion;
+				version = 0.7.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		26B135B1295EFC4F00F22458 /* ComposableArchitecture */ = {
+		26062BAF2965DE380087AD36 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 26B1359E295EF4F100F22458 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = 26062BA82965DC8C0087AD36 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		26062BB22965E0A30087AD36 /* CombineSchedulers */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26062BB12965E0A30087AD36 /* XCRemoteSwiftPackageReference "combine-schedulers" */;
+			productName = CombineSchedulers;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

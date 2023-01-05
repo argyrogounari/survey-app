@@ -8,25 +8,27 @@
 import Foundation
 import ComposableArchitecture
 
-public struct WelcomeReducer: ReducerProtocol {
-    
-    public struct State: Equatable {
-        var isShowingDetailView = false
-    }
-    
-    public enum Action: Equatable {
-        case welcomeTapped
-        case dismissTapped
-    }
-    
-    public func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
-        switch action {
-        case .welcomeTapped:
-            state.isShowingDetailView = true
-            return .none
-        case .dismissTapped:
-            state.isShowingDetailView = false
-            return .none
-        }
+
+public struct WelcomeState: Equatable {
+    var isShowingDetailView = false
+}
+
+public enum WelcomeAction: Equatable {
+    case welcomeTapped
+    case dismissTapped
+}
+
+struct WelcomeEnvironment {
+}
+
+let welcomeReducer = Reducer<WelcomeState, WelcomeAction, WelcomeEnvironment> { state, action, environment in
+    switch action {
+    case .welcomeTapped:
+        state.isShowingDetailView = true
+        return .none
+    case .dismissTapped:
+        state.isShowingDetailView = false
+        return .none
     }
 }
+

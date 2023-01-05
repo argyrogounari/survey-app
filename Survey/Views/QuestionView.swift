@@ -9,10 +9,10 @@ import SwiftUI
 import ComposableArchitecture
 
 struct QuestionView: View {
-    let store: StoreOf<TabViewReducer>
+    let store: Store<TabViewState, TabViewAction>
     
     var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
+        WithViewStore(self.store) { viewStore in
             VStack (alignment: .leading) {
                 VStack (alignment: .leading) {
                     Text("Questions submitted: \(viewStore.numQuestionsSubmitted)")
