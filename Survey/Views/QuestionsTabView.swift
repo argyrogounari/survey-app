@@ -65,8 +65,7 @@ struct QuestionsTabView_Previews: PreviewProvider {
         QuestionsTabView(store: Store(
             initialState: TabViewState(),
             reducer: tabViewReducer,
-            environment: TabViewEnvironment(
-            questionsList: Database().getQuestions)
+            environment: TabViewEnvironment(mainQueue: .main, getQuestionsAPICall:  Database().getQuestions)
         ))
     }
 }

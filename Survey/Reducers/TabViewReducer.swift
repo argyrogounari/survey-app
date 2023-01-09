@@ -38,7 +38,7 @@ enum TabViewAction: Equatable  {
     case questionOnDisplayChanged(currentQuestionTag: Int)
     case onAppear
     case fetchQuestionsAPICall
-    case getQuestionsListResponse(TaskResult<IdentifiedArrayOf<Question>>)
+    case fetchQuestionsResponse(Result<[Question], APIError>)
     case questionSelectionChanged
     case questionModified(question: Question, position: Int)
     case question(id: QuestionState.ID, action: QuestionAction)
@@ -59,7 +59,8 @@ struct QuestionEnvironment {
 }
 
 struct TabViewEnvironment {
-    let questionsList: () async throws -> [Question]
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+    let getQuestionsAPICall: () -> Effect<[Question], APIError>
 }
 
 let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment> { state, action, environment in
@@ -118,27 +119,19 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
             return Effect(value: .questionOnDisplayChanged(currentQuestionTag: state.currentQuestionTag + 1))
         case let .questionOnDisplayChanged(currentQuestionTag):
             state.currentQuestionTag = currentQuestionTag
-    //        state.questionInView = state.questions[state.currentQuestionTag - 1]
-    //        state.isPreviousButtonDisabled = state.questionInView == state.questions.first
-    //        state.isNextButtonDisabled = state.questionInView == state.questions.last
             return .none
         case .questionSelectionChanged:
             return .none
         case .onAppear:
             return Effect(value: .fetchQuestionsAPICall)
         case .fetchQuestionsAPICall:
-            return .task {
-                await .getQuestionsListResponse(
-                    TaskResult {
-                        try await IdentifiedArrayOf(environment.questionsList())
-                    })
-            }
-        case let .getQuestionsListResponse(.success(questionsList)):
+            return environment.getQuestionsAPICall().catchToEffect().map(TabViewAction.fetchQuestionsResponse)
+        case let .fetchQuestionsResponse(.success(questionsList)):
             questionsList.forEach({ question in
                 state.questions.append(QuestionState(question: question))
             })
             return .none
-        case .getQuestionsListResponse(.failure):
+        case .fetchQuestionsResponse(.failure):
             return .none
         case .questionModified(question: let question, position: let position):
     //        state.questions[position] = question

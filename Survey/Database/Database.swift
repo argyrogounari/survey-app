@@ -20,25 +20,72 @@ public class Database: ObservableObject {
         self.session = urlSession
     }
     
-    public func getQuestions() async throws -> [Question] {
-        let fetchTask = Task { () -> [Question] in
-            guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
-                throw APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/questions")
+    func getQuestions() -> Effect<[Question], APIError>  {
+        Effect.run { [weak self] subscriber in
+            guard let self = self else {
+                subscriber.send(completion: .finished)
+                return AnyCancellable {}
             }
-            let (data, _) = try await self.session.data(from: url)
-            let questions = try? JSONDecoder().decode([Question].self, from: data)
-            return questions!
-        }
-        
-        let result = await fetchTask.result
-        
-        switch result {
-        case .success(let questions):
-            return questions
-        case .failure(let error):
-            throw error
+            
+            guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
+                subscriber.send(completion: .failure(APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/questions")))
+                return AnyCancellable {}
+            }
+            let dataTask = self.session.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    subscriber.send(completion: .failure(APIError.runtimeError(error.localizedDescription)))
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    subscriber.send(completion: .failure(APIError.runtimeError("Fetch of questions from URL failed.")))
+                    return
+                }
+                if let data = data {
+                    guard let questions = try? JSONDecoder().decode([Question].self, from: data) else {
+                        subscriber.send(completion: .failure(APIError.runtimeError("Could not decode data to questions.")))
+                        return
+                    }
+                    subscriber.send(questions)
+                    subscriber.send(completion: .finished)
+                }
+            }
+            dataTask.resume()
+            
+            return AnyCancellable {
+                dataTask.cancel()
+            }
         }
     }
+    
+    //        return response.map({ _ , response -> Effect<Data, APIError> in
+    //            if let httpResponse = response as? HTTPURLResponse {
+    //                return Effect(value: httpResponse)
+    //            }
+    //            return Effect(error: APIError.runtimeError("Could not set answer."))
+    //        }).eraseToEffect()
+    //        guard let questions = try? JSONDecoder().decode([Question].self, from: data) else {
+    //            return Effect(error: APIError.runtimeError("Failed to decode questions."))
+    //        }
+    
+    
+    //        let fetchTask = Task { () -> [Question] in
+    //            guard let url = URL(string: "https://xm-assignment.web.app/questions") else {
+    //                throw APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/questions")
+    //            }
+    //            let (data, _) = try await self.session.data(from: url)
+    //            let questions = try? JSONDecoder().decode([Question].self, from: data)
+    //            return questions!
+    //        }
+    //
+    //        let result = await fetchTask.result
+    //
+    //        switch result {
+    //        case .success(let questions):
+    //            return questions
+    //        case .failure(let error):
+    //            throw error
+    //        }
     
     func setAnswer(question: Question)  -> Effect<HTTPURLResponse, APIError> {
         guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
