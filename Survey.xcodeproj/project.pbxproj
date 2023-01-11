@@ -10,6 +10,7 @@
 		26062BB02965DE380087AD36 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 26062BAF2965DE380087AD36 /* ComposableArchitecture */; };
 		26062BB32965E0A30087AD36 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 26062BB22965E0A30087AD36 /* CombineSchedulers */; };
 		26062BB5296C568D0087AD36 /* WelcomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26062BB4296C568D0087AD36 /* WelcomeTests.swift */; };
+		26062BB7296D97170087AD36 /* TabViewWithQuestionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26062BB6296D97170087AD36 /* TabViewWithQuestionsTest.swift */; };
 		26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeReducer.swift */; };
 		26B135A8295EFACE00F22458 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A7295EFACE00F22458 /* Question.swift */; };
 		26B135AD295EFB4D00F22458 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AC295EFB4D00F22458 /* Database.swift */; };
@@ -63,6 +64,7 @@
 
 /* Begin PBXFileReference section */
 		26062BB4296C568D0087AD36 /* WelcomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTests.swift; sourceTree = "<group>"; };
+		26062BB6296D97170087AD36 /* TabViewWithQuestionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewWithQuestionsTest.swift; sourceTree = "<group>"; };
 		26B135A4295EFA5600F22458 /* WelcomeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeReducer.swift; sourceTree = "<group>"; };
 		26B135A7295EFACE00F22458 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		26B135AC295EFB4D00F22458 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				77B4A56E29115C2C00D98EE8 /* MockURLProtocol.swift */,
 				77B4A57029115C7900D98EE8 /* DatabaseTests.swift */,
 				26062BB4296C568D0087AD36 /* WelcomeTests.swift */,
+				26062BB6296D97170087AD36 /* TabViewWithQuestionsTest.swift */,
 			);
 			path = SurveyTests;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 			files = (
 				26062BB5296C568D0087AD36 /* WelcomeTests.swift in Sources */,
 				77B4A57129115C7900D98EE8 /* DatabaseTests.swift in Sources */,
+				26062BB7296D97170087AD36 /* TabViewWithQuestionsTest.swift in Sources */,
 				77B4A56F29115C2C00D98EE8 /* MockURLProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

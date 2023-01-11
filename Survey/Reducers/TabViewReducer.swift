@@ -125,7 +125,9 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
         case .onAppear:
             return Effect(value: .fetchQuestionsAPICall)
         case .fetchQuestionsAPICall:
-            return environment.getQuestionsAPICall().catchToEffect().map(TabViewAction.fetchQuestionsResponse)
+            return environment.getQuestionsAPICall()
+                .receive(on: environment.mainQueue)
+                .catchToEffect().map(TabViewAction.fetchQuestionsResponse)
         case let .fetchQuestionsResponse(.success(questionsList)):
             questionsList.forEach({ question in
                 state.questions.append(QuestionState(question: question))
