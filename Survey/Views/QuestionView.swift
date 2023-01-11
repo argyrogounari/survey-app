@@ -89,7 +89,7 @@ struct QuestionView: View {
                 HStack {
                     Spacer()
                     Button(submitButtonText, action: {
-                        viewStore.send(.submitButtonClicked(question: viewStore.question))
+                        viewStore.send(.submitButtonClicked)
                     })
                     .padding([.top, .bottom], 10)
                     .padding([.leading, .trailing], 35)

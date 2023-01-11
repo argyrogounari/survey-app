@@ -45,8 +45,8 @@ enum TabViewAction: Equatable  {
 }
 
 enum QuestionAction: Equatable  {
-    case submitButtonClicked(question: Question)
-    case submitAnswer(question: Question)
+    case submitButtonClicked
+    case submitAnswer
     case submitAnswerResponse(Result<HTTPURLResponse, APIError>)
     case setSubmitButtonAppearance(answer: String)
     case numQuestionsSubmittedChanged(numQuestionsSubmitted: Int)
@@ -65,19 +65,6 @@ struct TabViewEnvironment {
 
 let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment> { state, action, environment in
     switch action {
-    case let .submitAnswerResponse(.success(httpUrlResponse)):
-        if (httpUrlResponse.statusCode == 200) {
-            state.showSuccessNotificationBanner = true
-            state.numQuestionsSubmitted += 1
-            state.submitButtonState = .disableQuestionSubmitted
-            state.answerTextFieldState = .disabled
-            return .none
-        } else {
-            return Effect(value: .submitAnswerResponse(Result.failure(APIError.runtimeError("Failed to set answer"))))
-        }
-    case .submitAnswerResponse(.failure):
-        state.showFailNotificationBanner = true
-        return .none
     case .setSubmitButtonAppearance(answer: let answer):
         if (answer.trimmingCharacters(in: .whitespacesAndNewlines) == "") {
             state.submitButtonState = .disableQuestionNotSubmitted
@@ -90,11 +77,25 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
         state.showSuccessNotificationBanner = false
         state.showFailNotificationBanner = false
         return .none
-    case .submitButtonClicked(question: let question):
-        return Effect(value: .submitAnswer(question: question))
-    case .submitAnswer(question: let question):
-        return environment.setAnswerAPICall(question).catchToEffect().map(QuestionAction.submitAnswerResponse)
-        
+    case .submitButtonClicked:
+        return Effect(value: .submitAnswer)
+    case .submitAnswer:
+        return environment.setAnswerAPICall(state.question).catchToEffect().map(QuestionAction.submitAnswerResponse)
+    case let .submitAnswerResponse(.success(httpUrlResponse)):
+        if (httpUrlResponse.statusCode == 200) {
+            state.showFailNotificationBanner = false
+            state.showSuccessNotificationBanner = true
+            state.numQuestionsSubmitted += 1
+            state.submitButtonState = .disableQuestionSubmitted
+            state.answerTextFieldState = .disabled
+            return .none
+        } else {
+            return Effect(value: .submitAnswerResponse(Result.failure(APIError.runtimeError("Failed to set answer"))))
+        }
+    case .submitAnswerResponse(.failure):
+        state.showSuccessNotificationBanner = false
+        state.showFailNotificationBanner = true
+        return .none
     case .numQuestionsSubmittedChanged(numQuestionsSubmitted: let numQuestionsSubmitted):
         state.numQuestionsSubmitted = numQuestionsSubmitted
         return .none
@@ -119,6 +120,16 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
             return Effect(value: .questionOnDisplayChanged(currentQuestionTag: state.currentQuestionTag + 1))
         case let .questionOnDisplayChanged(currentQuestionTag):
             state.currentQuestionTag = currentQuestionTag
+            if (currentQuestionTag == state.questions.first?.question.id) {
+                state.isPreviousButtonDisabled = true
+                state.isNextButtonDisabled = false
+            } else if (currentQuestionTag == state.questions.last?.question.id) {
+                state.isPreviousButtonDisabled = false
+                state.isNextButtonDisabled = true
+            } else {
+                state.isPreviousButtonDisabled = false
+                state.isNextButtonDisabled = false
+            }
             return .none
         case .questionSelectionChanged:
             return .none
@@ -136,7 +147,7 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
         case .fetchQuestionsResponse(.failure):
             return .none
         case .questionModified(question: let question, position: let position):
-    //        state.questions[position] = question
+//            state.questions[position] = question
             return .none
         case .question(id: let id, action: let action):
             return .none
