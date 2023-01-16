@@ -17,7 +17,7 @@ struct QuestionsTabView: View {
             state: \.tabView,
             action: AppAction.tabView
         )) { viewStore in
-            VStack {
+            VStack(alignment: .leading, spacing: 0) {
                 QuestionsSubmittedView(store: self.store.scope(
                     state: \.totalQusetionsSubmitted,
                     action: AppAction.totalQusetionsSubmitted
@@ -43,7 +43,6 @@ struct QuestionsTabView: View {
                 .swipeActions(content: {})
                 .swipeActions(allowsFullSwipe: false, content: {})
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .edgesIgnoringSafeArea(.vertical)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
@@ -68,7 +67,6 @@ struct QuestionsTabView: View {
                 }
             }
             .navigationTitle("Question \(viewStore.currentQuestionTag)/\(viewStore.questions.count)")
-            
         }
     }
 }
