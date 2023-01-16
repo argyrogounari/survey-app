@@ -5,6 +5,7 @@
 //  Created by Argyro Gounari on 28/12/2022.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 import ComposableArchitecture
@@ -20,16 +21,15 @@ public struct QuestionState: Equatable, Identifiable {
     public var id: Int {
         question.id
     }
-    var numQuestionsSubmitted = 0
     var question: Question
     var submitButtonState: SubmitButtonState = .disableQuestionNotSubmitted
     var answerTextFieldState: AnswerTextFieldState = .enabled
     var showFailNotificationBanner: Bool = false
     var showSuccessNotificationBanner: Bool = false
-    
-    public init (question: Question) {
-        self.question = question
-    }
+}
+
+struct TotalQusetionsSubmittedState: Equatable {
+    var num = 0
 }
 
 enum TabViewAction: Equatable  {
@@ -40,7 +40,6 @@ enum TabViewAction: Equatable  {
     case fetchQuestionsAPICall
     case fetchQuestionsResponse(Result<[Question], APIError>)
     case questionSelectionChanged
-    case questionModified(question: Question, position: Int)
     case question(id: QuestionState.ID, action: QuestionAction)
 }
 
@@ -49,18 +48,29 @@ enum QuestionAction: Equatable  {
     case submitAnswer
     case submitAnswerResponse(Result<HTTPURLResponse, APIError>)
     case setSubmitButtonAppearance(answer: String)
-    case numQuestionsSubmittedChanged(numQuestionsSubmitted: Int)
+    case numQuestionsSubmittedIncreased
     case notificationBannerDismissed
+}
+
+enum TotalQusetionsSubmittedAction: Equatable  {
+    case onAppear
+    case valueChanged(Int)
 }
 
 struct QuestionEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
     let setAnswerAPICall: (Question) -> Effect<HTTPURLResponse, APIError>
+    var numQuestionsSubmitted: CurrentValueSubject<Int, Never>
 }
 
 struct TabViewEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
     let getQuestionsAPICall: () -> Effect<[Question], APIError>
+    let numQuestionsSubmitted: CurrentValueSubject<Int, Never>
+}
+
+struct TotalQusetionsSubmittedEnvironment {
+    let numQuestionsSubmitted: CurrentValueSubject<Int, Never>
 }
 
 let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment> { state, action, environment in
@@ -85,10 +95,9 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
         if (httpUrlResponse.statusCode == 200) {
             state.showFailNotificationBanner = false
             state.showSuccessNotificationBanner = true
-            state.numQuestionsSubmitted += 1
             state.submitButtonState = .disableQuestionSubmitted
             state.answerTextFieldState = .disabled
-            return .none
+            return Effect(value: .numQuestionsSubmittedIncreased)
         } else {
             return Effect(value: .submitAnswerResponse(Result.failure(APIError.runtimeError("Failed to set answer"))))
         }
@@ -96,22 +105,33 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
         state.showSuccessNotificationBanner = false
         state.showFailNotificationBanner = true
         return .none
-    case .numQuestionsSubmittedChanged(numQuestionsSubmitted: let numQuestionsSubmitted):
-        state.numQuestionsSubmitted = numQuestionsSubmitted
+    case .numQuestionsSubmittedIncreased:
+        environment.numQuestionsSubmitted.value = environment.numQuestionsSubmitted.value + 1
         return .none
     }
 }
-    .debug()
+
+let totalQusetionsSubmittedReducer = Reducer<TotalQusetionsSubmittedState, TotalQusetionsSubmittedAction, TotalQusetionsSubmittedEnvironment> { state, action, environment in
+    switch action {
+    case .onAppear:
+        return environment.numQuestionsSubmitted.map(TotalQusetionsSubmittedAction.valueChanged).eraseToEffect()
+    case let .valueChanged(newNum):
+        state.num = newNum
+        return .none
+    }
+}
+
 
 let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.combine(
     questionReducer.forEach(
         state: \TabViewState.questions,
         action: /TabViewAction.question(id:action:),
-        environment: { _ in QuestionEnvironment(
-            mainQueue: .main,
-            setAnswerAPICall: Database().setAnswer
+        environment: { env in QuestionEnvironment(
+            mainQueue: env.mainQueue,
+            setAnswerAPICall: Database().setAnswer,
+            numQuestionsSubmitted: env.numQuestionsSubmitted
         )}
-      ),
+    ),
     Reducer { state, action, environment in
         switch action {
         case .previousTapped:
@@ -146,13 +166,45 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
             return .none
         case .fetchQuestionsResponse(.failure):
             return .none
-        case .questionModified(question: let question, position: let position):
-//            state.questions[position] = question
-            return .none
         case .question(id: let id, action: let action):
             return .none
         }
     }
+)
+
+struct AppState : Equatable {
+    var tabView: TabViewState
+    var totalQusetionsSubmitted: TotalQusetionsSubmittedState
+}
+
+enum AppAction: Equatable  {
+    case tabView(TabViewAction)
+    case totalQusetionsSubmitted(TotalQusetionsSubmittedAction)
+}
+
+struct AppEnvironment {
+    let numQuestionsSubmitted: CurrentValueSubject<Int, Never>
+}
+
+let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
+    totalQusetionsSubmittedReducer.pullback(
+        state: \.totalQusetionsSubmitted,
+        action: /AppAction.totalQusetionsSubmitted,
+        environment: { env in TotalQusetionsSubmittedEnvironment(
+            numQuestionsSubmitted: env.numQuestionsSubmitted
+        )}
+    ),
+    tabViewReducer.pullback(
+        state: \.tabView,
+        action: /AppAction.tabView,
+        environment: { env in
+            TabViewEnvironment(
+                mainQueue: .main,
+                getQuestionsAPICall: Database().getQuestions,
+                numQuestionsSubmitted: env.numQuestionsSubmitted
+            )
+        }
+    )
 )
     .debug()
 

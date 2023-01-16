@@ -58,17 +58,11 @@ struct QuestionView: View {
             submitButtonDisabled = true
         }
     }
-
+    
     var body: some View {
         WithViewStore(self.store) { viewStore in
             VStack (alignment: .leading) {
                 VStack (alignment: .leading) {
-                    Text("Questions submitted: \(viewStore.numQuestionsSubmitted)")
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Rectangle().fill(Color.yellow))
-                        .accessibilityIdentifier("questionsSubmittedText")
                     Text(viewStore.question.question)
                         .bold()
                         .frame(maxWidth: .infinity)
@@ -80,12 +74,12 @@ struct QuestionView: View {
                           text: viewStore.binding(
                             get: { $0.question.answer },
                             send: { .setSubmitButtonAppearance(answer: $0) }
-                        ))
-                    .padding([.top, .bottom], 40)
-                    .padding([.leading, .trailing], 20)
-                    .foregroundColor(answerTextFieldColor)
-                    .disabled(answerTextFieldDisabled)
-                    .accessibilityIdentifier("answerTextField")
+                          ))
+                .padding([.top, .bottom], 40)
+                .padding([.leading, .trailing], 20)
+                .foregroundColor(answerTextFieldColor)
+                .disabled(answerTextFieldDisabled)
+                .accessibilityIdentifier("answerTextField")
                 HStack {
                     Spacer()
                     Button(submitButtonText, action: {
@@ -110,14 +104,16 @@ struct QuestionView: View {
                       perform: changeAnswerTextFieldAppearance(state:)
             )
             .notificatioBanner(type: NotificationBannerType.success, isActive: viewStore.binding(
-                                    get: { $0.showSuccessNotificationBanner },
-                                    send: .notificationBannerDismissed
-                                ))
+                get: { $0.showSuccessNotificationBanner },
+                send: .notificationBannerDismissed
+            ))
             .notificatioBanner(type: NotificationBannerType.fail, isActive: viewStore.binding(
-                                    get: { $0.showFailNotificationBanner },
-                                    send: .notificationBannerDismissed
-                                ))
+                get: { $0.showFailNotificationBanner },
+                send: .notificationBannerDismissed
+            ))
         }
     }
 }
+
+
 

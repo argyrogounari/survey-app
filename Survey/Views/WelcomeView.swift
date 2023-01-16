@@ -5,6 +5,7 @@
 //  Created by argyro gounari on 29/10/2022.
 //
 
+import Combine
 import SwiftUI
 import ComposableArchitecture
 
@@ -15,9 +16,9 @@ struct WelcomeView: View {
         WithViewStore(self.store) { viewStore in
             VStack {
                 NavigationLink(destination: QuestionsTabView(store: Store(
-                    initialState: TabViewState(),
-                    reducer: tabViewReducer,
-                    environment: TabViewEnvironment(mainQueue: .main, getQuestionsAPICall: Database().getQuestions)
+                    initialState: AppState(tabView: TabViewState(), totalQusetionsSubmitted: TotalQusetionsSubmittedState()),
+                    reducer: appReducer,
+                    environment: AppEnvironment(numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
                 )), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped
@@ -55,6 +56,6 @@ struct WelcomeView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         WelcomeView( store: Store(initialState: WelcomeState(), reducer: welcomeReducer, environment: WelcomeEnvironment()
-        ))
+                                 ))
     }
 }
