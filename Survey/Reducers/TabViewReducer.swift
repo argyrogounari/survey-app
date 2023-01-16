@@ -26,6 +26,7 @@ public struct QuestionState: Equatable, Identifiable {
     var answerTextFieldState: AnswerTextFieldState = .enabled
     var showFailNotificationBanner: Bool = false
     var showSuccessNotificationBanner: Bool = false
+    var retryFromNotificationBanner: Bool = false
 }
 
 struct TotalQusetionsSubmittedState: Equatable {
@@ -50,6 +51,7 @@ enum QuestionAction: Equatable  {
     case setSubmitButtonAppearance(answer: String)
     case numQuestionsSubmittedIncreased
     case notificationBannerDismissed
+    case notificationBannerRetryPressed
 }
 
 enum TotalQusetionsSubmittedAction: Equatable  {
@@ -83,10 +85,6 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
             state.submitButtonState = .enabled
             return .none
         }
-    case .notificationBannerDismissed:
-        state.showSuccessNotificationBanner = false
-        state.showFailNotificationBanner = false
-        return .none
     case .submitButtonClicked:
         return Effect(value: .submitAnswer)
     case .submitAnswer:
@@ -108,6 +106,12 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
     case .numQuestionsSubmittedIncreased:
         environment.numQuestionsSubmitted.value = environment.numQuestionsSubmitted.value + 1
         return .none
+    case .notificationBannerDismissed:
+        state.showSuccessNotificationBanner = false
+        state.showFailNotificationBanner = false
+        return .none
+    case .notificationBannerRetryPressed:
+        return Effect(value: .submitButtonClicked)
     }
 }
 

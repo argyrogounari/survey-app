@@ -103,14 +103,17 @@ struct QuestionView: View {
             .onChange(of: viewStore.answerTextFieldState,
                       perform: changeAnswerTextFieldAppearance(state:)
             )
-            .notificatioBanner(type: NotificationBannerType.success, isActive: viewStore.binding(
+            .notificatioBanner(type: NotificationBannerType.success(isActive: viewStore.binding(
                 get: { $0.showSuccessNotificationBanner },
                 send: .notificationBannerDismissed
-            ))
-            .notificatioBanner(type: NotificationBannerType.fail, isActive: viewStore.binding(
+            )))
+            .notificatioBanner(type: NotificationBannerType.fail(isActive: viewStore.binding(
                 get: { $0.showFailNotificationBanner },
                 send: .notificationBannerDismissed
-            ))
+            ), retry: viewStore.binding(
+                get: { $0.retryFromNotificationBanner },
+                send: .notificationBannerRetryPressed
+            )))
         }
     }
 }
