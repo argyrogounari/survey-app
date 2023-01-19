@@ -40,7 +40,6 @@ enum TabViewAction: Equatable  {
     case onAppear
     case fetchQuestionsAPICall
     case fetchQuestionsResponse(Result<[Question], APIError>)
-    case questionSelectionChanged
     case question(id: QuestionState.ID, action: QuestionAction)
 }
 
@@ -154,8 +153,6 @@ let tabViewReducer = Reducer<TabViewState, TabViewAction, TabViewEnvironment>.co
                 state.isPreviousButtonDisabled = false
                 state.isNextButtonDisabled = false
             }
-            return .none
-        case .questionSelectionChanged:
             return .none
         case .onAppear:
             return Effect(value: .fetchQuestionsAPICall)
