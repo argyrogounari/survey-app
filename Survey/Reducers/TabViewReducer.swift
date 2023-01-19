@@ -47,7 +47,7 @@ enum TabViewAction: Equatable  {
 enum QuestionAction: Equatable  {
     case submitButtonClicked
     case submitAnswer
-    case submitAnswerResponse(Result<HTTPURLResponse, APIError>)
+    case submitAnswerResponse(Result<Int, APIError>)
     case setSubmitButtonAppearance(answer: String)
     case numQuestionsSubmittedIncreased
     case notificationBannerDismissed
@@ -61,7 +61,7 @@ enum TotalQusetionsSubmittedAction: Equatable  {
 
 struct QuestionEnvironment {
     var mainQueue: AnySchedulerOf<DispatchQueue>
-    let setAnswerAPICall: (Question) -> Effect<HTTPURLResponse, APIError>
+    let setAnswerAPICall: (Question) -> Effect<Int, APIError>
     var numQuestionsSubmitted: CurrentValueSubject<Int, Never>
 }
 
@@ -89,8 +89,8 @@ let questionReducer = Reducer<QuestionState, QuestionAction, QuestionEnvironment
         return Effect(value: .submitAnswer)
     case .submitAnswer:
         return environment.setAnswerAPICall(state.question).catchToEffect().map(QuestionAction.submitAnswerResponse)
-    case let .submitAnswerResponse(.success(httpUrlResponse)):
-        if (httpUrlResponse.statusCode == 200) {
+    case let .submitAnswerResponse(.success(statusCode)):
+        if (statusCode == 200) {
             state.showFailNotificationBanner = false
             state.showSuccessNotificationBanner = true
             state.submitButtonState = .disableQuestionSubmitted

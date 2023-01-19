@@ -53,7 +53,7 @@ public class Database: ObservableObject {
         }
     }
     
-    func setAnswer(question: Question)  -> Effect<HTTPURLResponse, APIError> {
+    func setAnswer(question: Question)  -> Effect<Int, APIError> {
         guard let url = URL(string: "https://xm-assignment.web.app/question/submit") else {
             return Effect(error: APIError.runtimeError("Invalid URL: https://xm-assignment.web.app/question/submit"))
             
@@ -67,9 +67,9 @@ public class Database: ObservableObject {
         let response = session.dataTaskPublisher(for: request).mapError({_ in
             APIError.runtimeError("URL session failed.")
         })
-        return response.flatMap({ _ , response -> Effect<HTTPURLResponse, APIError> in
+        return response.flatMap({ _ , response -> Effect<Int, APIError> in
             if let httpResponse = response as? HTTPURLResponse {
-                return Effect(value: httpResponse)
+                return Effect(value: httpResponse.statusCode)
             }
             return Effect(error: APIError.runtimeError("Could not set answer."))
         }).eraseToEffect()

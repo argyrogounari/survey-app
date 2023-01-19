@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import Foundation
+import Combine
 @testable import Survey
 import XCTest
 
@@ -21,13 +22,17 @@ class DatabaseTests: XCTestCase {
         urlSession = URLSession(configuration: configuration)
     }
     
+    func setAnswerAPICallMock() -> Effect<Int, APIError> {
+        return Effect<Int, APIError>(value: 200)
+    }
+    
     func testGetQuestions() {
         let store = TestStore(
             initialState: TabViewState(),
             reducer: tabViewReducer,
             environment: TabViewEnvironment(mainQueue: scheduler.eraseToAnyScheduler(),
                                             getQuestionsAPICall: { Effect<[Question], APIError>(value: self.mockQuestions
-                                            ) })
+                                            ) }, numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
         )
         
         store.send(.fetchQuestionsAPICall)
@@ -37,31 +42,20 @@ class DatabaseTests: XCTestCase {
         }
     }
     
-    func testSetAnswer() async throws {
-        //        let database = await Database(urlSession: urlSession)
-        //
-        //        let question = Question(id: 1, question: "What is your favourite color?", answer: "Blue")
-        //        let mockData = try JSONEncoder().encode(question)
-        //
-        //        MockURLProtocol.requestHandler = { request in
-        //            return (HTTPURLResponse(), mockData)
-        //        }
-        //
-        //        let expectation = XCTestExpectation(description: "Post Answer")
-        //
-        //        await database.setAnswer(question: question) { httpResponse, isSuccessful in
-        //            XCTAssertEqual(httpResponse.statusCode == 200 || httpResponse.statusCode == 400, true)
-        //            if (httpResponse.statusCode == 200) {
-        //                XCTAssertEqual(isSuccessful, true)
-        //            } else if (httpResponse.statusCode == 400) {
-        //                XCTAssertEqual(isSuccessful, false)
-        //            }
-        //            expectation.fulfill()
-        //        }
-        //
-        //        self.wait(for: [expectation], timeout: 1)
+    func testSetAnswer() {
+        let question = Question(id: 1, question: "What is your favourite color?", answer: "Blue")
+        
+        let store = TestStore(initialState: QuestionState(question: question), reducer: questionReducer, environment: QuestionEnvironment(mainQueue: scheduler.eraseToAnyScheduler(), setAnswerAPICall: { _ in self.setAnswerAPICallMock()
+        }, numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0)))
+       
+       store.send(.submitButtonClicked)
+       store.receive(.submitAnswer)
+       store.receive(.submitAnswerResponse(.success(200))) {
+            $0.submitButtonState = SubmitButtonState.disableQuestionSubmitted
+            $0.answerTextFieldState = AnswerTextFieldState.disabled
+            $0.showSuccessNotificationBanner = true
+        }
+        store.receive(.numQuestionsSubmittedIncreased)
     }
 }
-
-
 
