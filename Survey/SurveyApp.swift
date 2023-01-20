@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import ComposableArchitecture
 
 @main
@@ -15,10 +16,15 @@ struct SurveyApp: App {
             NavigationView {
                 WelcomeView(
                     store: Store(
-                        initialState: WelcomeState(),
-                        reducer: welcomeReducer,
-                        environment: WelcomeEnvironment()
-                        )
+                        initialState: AppState(
+                            welcome: WelcomeState(),
+                            tabView: TabViewState(),
+                            totalQusetionsSubmitted: TotalQusetionsSubmittedState()),
+                        reducer: appReducer,
+                        environment: AppEnvironment(
+                            mainQueue: .main,
+                            numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
+                    )
                 )
             }
         }

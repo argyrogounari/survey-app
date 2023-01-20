@@ -117,6 +117,3 @@ struct QuestionView: View {
         }
     }
 }
-
-
-

@@ -50,7 +50,7 @@ class QuestionTests: XCTestCase {
     
     func testNumOfQuestionsSubmittedIncreased() {
         let scheduler = DispatchQueue.test
-        let store = TestStore(initialState: AppState(tabView: TabViewState(questions: [QuestionState(question: Question(id: 1, question: "What is your favourite color?")), QuestionState(question: Question(id: 2, question: "What is your favourite animal?"))]), totalQusetionsSubmitted: TotalQusetionsSubmittedState()), reducer: appReducer, environment: AppEnvironment(mainQueue: scheduler.eraseToAnyScheduler(), numQuestionsSubmitted:  CurrentValueSubject<Int, Never>(0)))
+        let store = TestStore(initialState: AppState(welcome: WelcomeState(), tabView: TabViewState(questions: [QuestionState(question: Question(id: 1, question: "What is your favourite color?")), QuestionState(question: Question(id: 2, question: "What is your favourite animal?"))]), totalQusetionsSubmitted: TotalQusetionsSubmittedState()), reducer: appReducer, environment: AppEnvironment(mainQueue: scheduler.eraseToAnyScheduler(), numQuestionsSubmitted:  CurrentValueSubject<Int, Never>(0)))
         
         store.send(.tabView(.question(id: 1, action: .numQuestionsSubmittedIncreased)))
         store.send(.totalQusetionsSubmitted(.valueChanged(1))) {

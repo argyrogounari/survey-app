@@ -18,7 +18,7 @@ struct QuestionsTabView: View {
             action: AppAction.tabView
         )) { viewStore in
             VStack(alignment: .leading, spacing: 0) {
-                QuestionsSubmittedView(store: self.store.scope(
+                TotalQusetionsSubmittedView(store: self.store.scope(
                     state: \.totalQusetionsSubmitted,
                     action: AppAction.totalQusetionsSubmitted
                 ))
@@ -70,22 +70,3 @@ struct QuestionsTabView: View {
         }
     }
 }
-
-struct QuestionsSubmittedView: View {
-    let store: Store<TotalQusetionsSubmittedState, TotalQusetionsSubmittedAction>
-    
-    var body: some View {
-        WithViewStore(self.store) { viewStore in
-            Text("Questions submitted: \(viewStore.num)")
-                .multilineTextAlignment(.center)
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Rectangle().fill(Color.yellow))
-                .accessibilityIdentifier("questionsSubmittedText")
-                .onAppear {
-                    viewStore.send(.onAppear)
-                }
-        }
-    }
-}
-

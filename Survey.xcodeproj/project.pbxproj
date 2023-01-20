@@ -11,10 +11,14 @@
 		26062BB32965E0A30087AD36 /* CombineSchedulers in Frameworks */ = {isa = PBXBuildFile; productRef = 26062BB22965E0A30087AD36 /* CombineSchedulers */; };
 		26062BB5296C568D0087AD36 /* WelcomeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26062BB4296C568D0087AD36 /* WelcomeTests.swift */; };
 		26062BB7296D97170087AD36 /* TabViewWithQuestionsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26062BB6296D97170087AD36 /* TabViewWithQuestionsTest.swift */; };
-		26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeReducer.swift */; };
+		26261798297AE03300A6A851 /* QuestionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26261797297AE03300A6A851 /* QuestionState.swift */; };
+		2626179A297AE06100A6A851 /* TotalQusetionsSubmittedState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26261799297AE06100A6A851 /* TotalQusetionsSubmittedState.swift */; };
+		2626179C297AE0C000A6A851 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2626179B297AE0C000A6A851 /* AppState.swift */; };
+		2626179E297AE15200A6A851 /* TotalQusetionsSubmittedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2626179D297AE15200A6A851 /* TotalQusetionsSubmittedView.swift */; };
+		26B135A5295EFA5600F22458 /* WelcomeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A4295EFA5600F22458 /* WelcomeState.swift */; };
 		26B135A8295EFACE00F22458 /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135A7295EFACE00F22458 /* Question.swift */; };
 		26B135AD295EFB4D00F22458 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AC295EFB4D00F22458 /* Database.swift */; };
-		26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AE295EFB7500F22458 /* TabViewReducer.swift */; };
+		26B135AF295EFB7500F22458 /* TabViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B135AE295EFB7500F22458 /* TabViewState.swift */; };
 		26EBF7E2297A9F100044727C /* SurveyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EBF7E1297A9F100044727C /* SurveyUITests.swift */; };
 		77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A536290D24FE00D98EE8 /* SurveyApp.swift */; };
 		77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77B4A538290D24FE00D98EE8 /* WelcomeView.swift */; };
@@ -64,10 +68,14 @@
 /* Begin PBXFileReference section */
 		26062BB4296C568D0087AD36 /* WelcomeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeTests.swift; sourceTree = "<group>"; };
 		26062BB6296D97170087AD36 /* TabViewWithQuestionsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewWithQuestionsTest.swift; sourceTree = "<group>"; };
-		26B135A4295EFA5600F22458 /* WelcomeReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeReducer.swift; sourceTree = "<group>"; };
+		26261797297AE03300A6A851 /* QuestionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionState.swift; sourceTree = "<group>"; };
+		26261799297AE06100A6A851 /* TotalQusetionsSubmittedState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalQusetionsSubmittedState.swift; sourceTree = "<group>"; };
+		2626179B297AE0C000A6A851 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		2626179D297AE15200A6A851 /* TotalQusetionsSubmittedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalQusetionsSubmittedView.swift; sourceTree = "<group>"; };
+		26B135A4295EFA5600F22458 /* WelcomeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeState.swift; sourceTree = "<group>"; };
 		26B135A7295EFACE00F22458 /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		26B135AC295EFB4D00F22458 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
-		26B135AE295EFB7500F22458 /* TabViewReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewReducer.swift; sourceTree = "<group>"; };
+		26B135AE295EFB7500F22458 /* TabViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewState.swift; sourceTree = "<group>"; };
 		26EBF7DF297A9F100044727C /* SurveyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SurveyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EBF7E1297A9F100044727C /* SurveyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyUITests.swift; sourceTree = "<group>"; };
 		77B4A533290D24FE00D98EE8 /* Survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -137,13 +145,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		26B135B32962E28A00F22458 /* Reducers */ = {
+		26B135B32962E28A00F22458 /* Stores */ = {
 			isa = PBXGroup;
 			children = (
-				26B135A4295EFA5600F22458 /* WelcomeReducer.swift */,
-				26B135AE295EFB7500F22458 /* TabViewReducer.swift */,
+				26B135A4295EFA5600F22458 /* WelcomeState.swift */,
+				26B135AE295EFB7500F22458 /* TabViewState.swift */,
+				26261797297AE03300A6A851 /* QuestionState.swift */,
+				26261799297AE06100A6A851 /* TotalQusetionsSubmittedState.swift */,
+				2626179B297AE0C000A6A851 /* AppState.swift */,
 			);
-			path = Reducers;
+			path = Stores;
 			sourceTree = "<group>";
 		};
 		26EBF7E0297A9F100044727C /* SurveyUITests */ = {
@@ -179,7 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				77B4A536290D24FE00D98EE8 /* SurveyApp.swift */,
-				26B135B32962E28A00F22458 /* Reducers */,
+				26B135B32962E28A00F22458 /* Stores */,
 				26B135AB295EFB3B00F22458 /* Database */,
 				26B135A6295EFABE00F22458 /* Models */,
 				77B4A5752911853C00D98EE8 /* Views */,
@@ -224,6 +235,7 @@
 				77B4A568290D7C2C00D98EE8 /* QuestionsTabView.swift */,
 				77B4A56A290F109200D98EE8 /* QuestionView.swift */,
 				77B4A56C290FBC7600D98EE8 /* NotificationBannerView.swift */,
+				2626179D297AE15200A6A851 /* TotalQusetionsSubmittedView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -390,14 +402,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26B135A5295EFA5600F22458 /* WelcomeReducer.swift in Sources */,
+				26B135A5295EFA5600F22458 /* WelcomeState.swift in Sources */,
 				77B4A539290D24FE00D98EE8 /* WelcomeView.swift in Sources */,
+				2626179A297AE06100A6A851 /* TotalQusetionsSubmittedState.swift in Sources */,
 				77B4A561290D2DFE00D98EE8 /* ColorHelper.swift in Sources */,
 				77B4A56B290F109200D98EE8 /* QuestionView.swift in Sources */,
-				26B135AF295EFB7500F22458 /* TabViewReducer.swift in Sources */,
+				26B135AF295EFB7500F22458 /* TabViewState.swift in Sources */,
+				2626179E297AE15200A6A851 /* TotalQusetionsSubmittedView.swift in Sources */,
 				77B4A569290D7C2C00D98EE8 /* QuestionsTabView.swift in Sources */,
+				26261798297AE03300A6A851 /* QuestionState.swift in Sources */,
 				77B4A537290D24FE00D98EE8 /* SurveyApp.swift in Sources */,
 				26B135A8295EFACE00F22458 /* Question.swift in Sources */,
+				2626179C297AE0C000A6A851 /* AppState.swift in Sources */,
 				77B4A56D290FBC7600D98EE8 /* NotificationBannerView.swift in Sources */,
 				26B135AD295EFB4D00F22458 /* Database.swift in Sources */,
 			);

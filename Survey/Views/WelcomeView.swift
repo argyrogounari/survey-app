@@ -10,18 +10,15 @@ import SwiftUI
 import ComposableArchitecture
 
 struct WelcomeView: View {
-    let store: Store<WelcomeState, WelcomeAction>
+    let store: Store<AppState, AppAction>
     
     var body: some View {
-        WithViewStore(self.store) { viewStore in
+        WithViewStore(self.store.scope(
+            state: \.welcome,
+            action: AppAction.welcome
+        )) { viewStore in
             VStack {
-                NavigationLink(destination: QuestionsTabView(store: Store(
-                    initialState: AppState(tabView: TabViewState(), totalQusetionsSubmitted: TotalQusetionsSubmittedState()),
-                    reducer: appReducer,
-                    environment: AppEnvironment(
-                        mainQueue: .main,
-                        numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
-                )), isActive: viewStore.binding(
+                NavigationLink(destination: QuestionsTabView(store: store), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped
                 )) { EmptyView() }.navigationTitle("Welcome").navigationBarTitleDisplayMode(.inline)
@@ -55,9 +52,3 @@ struct WelcomeView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        WelcomeView( store: Store(initialState: WelcomeState(), reducer: welcomeReducer, environment: WelcomeEnvironment()
-                                 ))
-    }
-}
