@@ -148,11 +148,11 @@
 		26B135B32962E28A00F22458 /* Stores */ = {
 			isa = PBXGroup;
 			children = (
+				2626179B297AE0C000A6A851 /* AppState.swift */,
 				26B135A4295EFA5600F22458 /* WelcomeState.swift */,
 				26B135AE295EFB7500F22458 /* TabViewState.swift */,
 				26261797297AE03300A6A851 /* QuestionState.swift */,
 				26261799297AE06100A6A851 /* TotalQusetionsSubmittedState.swift */,
-				2626179B297AE0C000A6A851 /* AppState.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
