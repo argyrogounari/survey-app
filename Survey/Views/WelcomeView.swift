@@ -18,7 +18,9 @@ struct WelcomeView: View {
                 NavigationLink(destination: QuestionsTabView(store: Store(
                     initialState: AppState(tabView: TabViewState(), totalQusetionsSubmitted: TotalQusetionsSubmittedState()),
                     reducer: appReducer,
-                    environment: AppEnvironment(numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
+                    environment: AppEnvironment(
+                        mainQueue: .main,
+                        numQuestionsSubmitted: CurrentValueSubject<Int, Never>(0))
                 )), isActive: viewStore.binding(
                     get: { $0.isShowingDetailView },
                     send: .dismissTapped

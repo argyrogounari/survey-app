@@ -184,6 +184,7 @@ enum AppAction: Equatable  {
 }
 
 struct AppEnvironment {
+    var mainQueue: AnySchedulerOf<DispatchQueue>
     let numQuestionsSubmitted: CurrentValueSubject<Int, Never>
 }
 
@@ -200,7 +201,7 @@ let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
         action: /AppAction.tabView,
         environment: { env in
             TabViewEnvironment(
-                mainQueue: .main,
+                mainQueue: env.mainQueue,
                 getQuestionsAPICall: Database().getQuestions,
                 numQuestionsSubmitted: env.numQuestionsSubmitted
             )
